@@ -1,0 +1,41 @@
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/myfragment_layout">
+
+    <TextView
+        android:id="@+id/storyTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="29dp"
+        android:layout_marginStart="29dp"
+        android:layout_marginTop="27dp"
+        android:text="TextView" />
+
+    <ImageView
+        android:id="@+id/imageStory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/storyTitle"
+        android:layout_alignStart="@+id/storyTitle"
+        android:layout_below="@+id/storyTitle"
+        android:layout_marginTop="32dp"
+        />
+
+    <Button
+        android:id="@+id/takeExam"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="11dp"
+        android:layout_marginEnd="13dp"
+        android:layout_marginRight="13dp"
+        android:text="Take Exam"
+        android:visibility="invisible"/>
+</RelativeLayout>

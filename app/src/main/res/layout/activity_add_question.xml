@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ScrollView01"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/addQuestionLayout">
+
+
+        <EditText
+            android:id="@+id/questionTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="23dp"
+            android:layout_marginStart="23dp"
+            android:layout_marginTop="26dp"
+            android:ems="10"
+            android:width="500dp"
+            android:hint="Question details"
+            android:inputType="textPersonName"
+            android:text="" />
+
+        <EditText
+            android:id="@+id/option1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="74dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text=""
+            android:hint="Answer 1"
+            android:layout_below="@+id/questionTitle"
+            android:layout_alignLeft="@+id/questionTitle"
+            android:layout_alignStart="@+id/questionTitle" />
+
+    <Button
+            android:id="@+id/saveAndAddQuestion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="save and add more"
+        android:layout_below="@+id/questionTitle"
+        android:layout_alignRight="@+id/questionTitle"
+        android:layout_alignEnd="@+id/questionTitle"
+        android:layout_marginRight="49dp"
+        android:layout_marginEnd="49dp" />
+
+        <Button
+            android:id="@+id/saveQuestion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="19dp"
+            android:layout_marginRight="19dp"
+            android:text="save and exit"
+            android:layout_below="@+id/questionTitle"
+            android:layout_toLeftOf="@+id/saveAndAddQuestion"
+            android:layout_toStartOf="@+id/saveAndAddQuestion" />
+
+    <EditText
+        android:id="@+id/option2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/option1"
+        android:layout_alignStart="@+id/option1"
+        android:layout_below="@+id/option1"
+        android:layout_marginTop="12dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text=""
+        android:hint="Answer 2"/>
+
+    <EditText
+        android:id="@+id/option3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Answer 3"
+        android:layout_marginTop="17dp"
+        android:layout_below="@+id/option2"
+        android:layout_alignLeft="@+id/option2"
+        android:layout_alignStart="@+id/option2" />
+
+    <EditText
+        android:id="@+id/option4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/option3"
+        android:layout_alignStart="@+id/option3"
+        android:layout_below="@+id/option3"
+        android:layout_marginTop="18dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Answer 4"/>
+
+
+
+    <EditText
+        android:id="@+id/option5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/option4"
+        android:layout_alignStart="@+id/option4"
+        android:layout_below="@+id/option4"
+        android:layout_marginTop="23dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Answer 5" />
+
+    <EditText
+        android:id="@+id/answerTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/questionTitle"
+        android:layout_alignRight="@+id/questionTitle"
+        android:layout_alignTop="@+id/option1"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Answer (Option 1) " />
+
+        <TextView
+            android:id="@+id/addQuestionErrMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="TextView" />
+
+    </RelativeLayout>
+</ScrollView>

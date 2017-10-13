@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.read.storybook.LevelActivity">
+
+    <EditText
+        android:id="@+id/levelTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Level name"
+        android:inputType="textPersonName"
+        android:layout_marginStart="90dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/levelAddBtn"
+        tools:layout_constraintBaseline_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="90dp" />
+
+    <Button
+        android:id="@+id/levelAddBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add"
+        tools:layout_constraintTop_creator="1"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="52dp"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/levelTxt"
+        android:layout_marginLeft="22dp" />
+
+    <TextView
+        android:id="@+id/lvlErrMsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        app:layout_constraintRight_toRightOf="@+id/levelTxt"
+        android:layout_marginTop="16dp"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/levelTxt"
+        android:visibility="invisible"/>
+
+    <TextView
+        android:id="@+id/levelActErrMsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_marginStart="15dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/lvlErrMsg"
+        tools:layout_constraintBaseline_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="@+id/lvlErrMsg"
+        android:layout_marginLeft="15dp"
+        android:visibility="invisible"/>
+
+</android.support.constraint.ConstraintLayout>

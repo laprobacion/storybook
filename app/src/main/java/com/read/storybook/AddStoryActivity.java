@@ -2,12 +2,14 @@ package com.read.storybook;
 
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -31,7 +33,7 @@ import java.util.Set;
 
 public class AddStoryActivity extends AppCompatActivity {
     Button uploadBtn;
-    ImageView arrImageView [];
+    EditText arrImageView [];
     EditText arrEditTxt [];
     EditText addStoryName ;
     Image[] image;
@@ -59,11 +61,12 @@ public class AddStoryActivity extends AppCompatActivity {
 
         });
 
-        Button saveStoryAddBtn = (Button) findViewById(R.id.saveStoryAddBtn);
+        final Button saveStoryAddBtn = (Button) findViewById(R.id.saveStoryAddBtn);
         saveStoryAddBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
+                saveStoryAddBtn.setEnabled(false);
                 String err = validate();
                 if(err != null){
                     addStoryErrMsg.setTextColor(Color.RED);
@@ -77,6 +80,7 @@ public class AddStoryActivity extends AppCompatActivity {
                         story.addImage(image[i]);
                     }
                     create(story);
+                    saveStoryAddBtn.setEnabled(true);
                 }
             }
 
@@ -140,7 +144,7 @@ public class AddStoryActivity extends AppCompatActivity {
             if(data.getClipData() != null){
                 count = data.getClipData().getItemCount();
             }
-            arrImageView = new ImageView[count];
+            arrImageView = new EditText[count];
             arrEditTxt = new EditText[count];
             image = new Image[count];
             int [] arrIds = new int [count];
@@ -166,7 +170,7 @@ public class AddStoryActivity extends AppCompatActivity {
 
 
                 RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                lp.width = 200;
+
                 RelativeLayout.LayoutParams lpTxt = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 lpTxt.width = 100;
                 lpTxt.height = 200;
@@ -174,11 +178,12 @@ public class AddStoryActivity extends AppCompatActivity {
                 txtPriority.setHint("1");
                 lpTxt.setMargins(100,top + 65,0,0);
                 txtPriority.setLayoutParams(lpTxt);
-                ImageView imageView = new ImageView(AddStoryActivity.this);
+                EditText imageView = new EditText(AddStoryActivity.this);
+                imageView.setEnabled(false);
                 imageView.setId(i);
-                imageView.setImageBitmap(bitmap);
+                imageView.setText(getFileName(selectedImage));
                 //lp.addRule(RelativeLayout.BELOW, parentId);
-                lp.setMargins(300,top,0,0);
+                lp.setMargins(300,top+120,0,0);
                 top+=200;
                 imageView.setLayoutParams(lp);
                 layout.addView(txtPriority);
@@ -194,5 +199,25 @@ public class AddStoryActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-
+    public String getFileName(Uri uri) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+        return result;
+    }
 }

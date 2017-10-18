@@ -67,7 +67,7 @@ public class PageStoryFragment extends Fragment {
                 Intent myIntent = new Intent(getActivity(), ExamActivity.class);
                 myIntent.putExtra(AppConstants.QUESTIONS,story);
                 startActivity(myIntent);
-                getActivity().finish();
+               getActivity().finish();
             }
         });
         return v;

@@ -16,21 +16,27 @@ import java.util.List;
 public class ExamActivity extends AppCompatActivity {
     MyPageAdapter pageAdapter;
     Story story;
+    List<Fragment> fList;
+
+    public List<Fragment> getFragments(){
+        return this.fList;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exam);
         story = (Story) getIntent().getSerializableExtra(AppConstants.QUESTIONS);
-        pageAdapter = new MyPageAdapter(getSupportFragmentManager(), getFragments());
+        pageAdapter = new MyPageAdapter(getSupportFragmentManager(), createFragments());
         ViewPager pager = (ViewPager)findViewById(R.id.examviewpager);
         pager.setAdapter(pageAdapter);
     }
-    private List<Fragment> getFragments() {
-        List<Fragment> fList = new ArrayList<Fragment>();
+    private List<Fragment> createFragments() {
+        fList = new ArrayList<Fragment>();
         int ctr = 0;
 
         for(Question q : QuestionService.randomizeQuestions(story)){
-            fList.add(PageExamFragment.newInstance( (ctr + 1) == story.getQuestions().size(), q));
+            int p = (ctr + 1);
+            fList.add(PageExamFragment.newInstance(story.getId(), p + " of " + story.getQuestions().size(), p == story.getQuestions().size(), q));
             ctr++;
         }
         return fList;

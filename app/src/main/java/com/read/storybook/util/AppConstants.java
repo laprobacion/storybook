@@ -13,5 +13,6 @@ public class AppConstants {
     public static final String STORY_ID = "STORY_ID";
     public static final String RETRIEVE_IMG = "RETRIEVE_IMG";
     public static final String QUESTIONS = "QUESTIONS";
-
+    public static final String EXAM_PAGING = "EXAM_PAGING";
+    public static final String EXAM_IS_LAST = "EXAM_IS_LAST";
 }

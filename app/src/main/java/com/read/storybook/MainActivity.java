@@ -74,7 +74,8 @@ public class MainActivity extends AppCompatActivity
                         user.setAdmin(resp.optInt("isAdmin") == 1);
                         user.setId(resp.optString("id"));
                         String pass = resp.optString("password").replace("\n","");
-                        user.setPassword(Encryptor.decrypt(pass));
+                        user.setPassword(Encryptor.decrypt(pass)); // REMOVE AFTER MOCK
+
                         AppCache.getInstance().setUser(user);
                     }
                 }catch (Exception e){e.printStackTrace();}

@@ -142,11 +142,12 @@ public class StoryActivity extends FragmentActivity{
         }catch (Exception e){ e.printStackTrace();}
         return  questions;
     }
-    private void getQuestions(String storyId, final Story story){
+    private void getQuestions(final String storyId, final Story story){
         Service service = new Service("Loading resources...", StoryActivity.this, new ServiceResponse() {
             @Override
             public void postExecute(JSONObject resp) {
                 try {
+                    tempStory.setId(storyId);
                     tempStory.setQuestions( createQuestions(resp));
                     User user = AppCache.getInstance().getUser();
                     if(user.isAdmin() && tempStory != null && tempStory.getQuestions() != null && tempStory.getQuestions().size() == 0){

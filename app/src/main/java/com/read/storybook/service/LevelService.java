@@ -1,5 +1,7 @@
 package com.read.storybook.service;
 
+import android.app.Activity;
+
 import com.loopj.android.http.RequestParams;
 import com.read.storybook.dao.LevelDao;
 import com.read.storybook.model.Level;
@@ -24,7 +26,12 @@ public class LevelService {
 		service.post("http://jabahan.com/storybook/level/create.php", params);
 		service.execute();
 	}
-
+	public static void delete(Activity activity, String levelId, Service service){
+		RequestParams params = new RequestParams();
+		params.put("levelId", levelId);
+		service.post("http://jabahan.com/storybook/level/delete.php", params);
+		Util.delete(activity,service);
+	}
 	public static int getScore(User user, Level level){
 		int score = 0;
 		for(Story story : level.getStories()){

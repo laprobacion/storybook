@@ -1,21 +1,11 @@
 package com.read.storybook;
 
-
-import android.app.Fragment;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.view.LayoutInflater;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.read.storybook.model.Level;
 import com.read.storybook.model.User;
@@ -23,27 +13,26 @@ import com.read.storybook.service.LevelService;
 import com.read.storybook.service.Service;
 import com.read.storybook.service.ServiceResponse;
 import com.read.storybook.util.AppCache;
-import com.read.storybook.util.AppConstants;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-public class StoriesFragment extends Fragment{
-
-    View myView;
-    @Nullable
+public class LevelsActivity extends AppCompatActivity {
+    ListView lv;
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        myView = inflater.inflate(R.layout.stories_layout, container, false);
-        FloatingActionButton fab = (FloatingActionButton) myView.findViewById(R.id.fab);
-             fab.setOnClickListener(new View.OnClickListener() {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_levels);
+
+        lv= (ListView)findViewById(R.id.list);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent myIntent = new Intent(getActivity(), LevelActivity.class);
+                Intent myIntent = new Intent(LevelsActivity.this, LevelActivity.class);
                 startActivity(myIntent);
             }
         });
@@ -52,14 +41,16 @@ public class StoriesFragment extends Fragment{
         if(!user.isAdmin()){
             fab.setVisibility(View.INVISIBLE);
         }
-        return myView;
     }
-
     @Override
     public void onResume() {
         super.onResume();
-        search(myView);
+        if(lv.getAdapter() != null){
+            lv.setAdapter(null);
+        }
+        search();
     }
+
 
     private List<Level> createList(JSONObject resp){
         List<Level> levels = new ArrayList<Level>();
@@ -74,13 +65,13 @@ public class StoriesFragment extends Fragment{
         }
         return levels;
     }
-    private void search(final View view){
-        Service service = new Service("Searching level...", getActivity(), new ServiceResponse() {
+    private void search(){
+        Service service = new Service("Searching level...", LevelsActivity.this, new ServiceResponse() {
             @Override
             public void postExecute(JSONObject resp) {
                 try {
                     if (resp.optString("records") != null) {
-                        addLevels(view, createList(resp));
+                        addLevels(createList(resp));
                     }else{
 
                     }
@@ -89,9 +80,9 @@ public class StoriesFragment extends Fragment{
         });
         LevelService.read(service);
     }
-    private void addLevels(View myView, List<Level> levels){
-        ListView lv= myView.findViewById(R.id.list);
-        lv.setAdapter(new CustomAdapter(this.getActivity(), levels));
+    private void addLevels(List<Level> levels){
+
+        lv.setAdapter(new CustomAdapter(LevelsActivity.this, levels));
 
     }
 }

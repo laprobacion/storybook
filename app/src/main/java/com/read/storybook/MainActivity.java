@@ -1,11 +1,8 @@
 package com.read.storybook;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.app.FragmentManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -172,7 +169,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_score_layout) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, new ScoreFragment()).commit();
         } else if (id == R.id.nav_stories_layout) {
-            fragmentManager.beginTransaction().replace(R.id.content_frame, new StoriesFragment()).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, new LevelsFragment()).commit();
         } else if (id == R.id.nav_top_scores_layout) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, new TopScoresFragment()).commit();
         }

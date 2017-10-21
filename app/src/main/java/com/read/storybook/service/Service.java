@@ -80,12 +80,17 @@ public class Service extends AsyncTask<Void, Void, Void> {
         progressBar.show();
 
     }
+
     @Override
     protected void onPostExecute(Void result) {
         if(response != null){
             sr.postExecute(response);
         }
-        progressBar.dismiss();
+        try {
+            progressBar.dismiss();
+        }catch (Exception e){
+            //exit silently
+        }
     }
     @Override
     protected Void doInBackground(Void... params) {

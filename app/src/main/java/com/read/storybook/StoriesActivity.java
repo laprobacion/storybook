@@ -28,14 +28,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StoriesActivity extends AppCompatActivity {
-
+    ListView lv;
     Level level;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stories);
         level = (Level)getIntent().getSerializableExtra(AppConstants.LEVEL_NAME);
-
+        lv= (ListView)findViewById(R.id.list);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,6 +53,9 @@ public class StoriesActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        if(lv.getAdapter() != null){
+            lv.setAdapter(null);
+        }
         search();
     }
     private void search(){
@@ -85,7 +88,7 @@ public class StoriesActivity extends AppCompatActivity {
         return stories;
     }
     private void addStories(List<Story> stories){
-        ListView lv= (ListView)findViewById(R.id.list);
+
         lv.setAdapter(new CustomStoryAdapter(this, stories));
     }
 }

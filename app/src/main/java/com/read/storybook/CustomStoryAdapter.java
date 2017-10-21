@@ -8,13 +8,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.read.storybook.model.Level;
 import com.read.storybook.model.Story;
+import com.read.storybook.service.Service;
+import com.read.storybook.service.ServiceResponse;
+import com.read.storybook.service.StoryService;
+import com.read.storybook.util.AppCache;
 import com.read.storybook.util.AppConstants;
+
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -73,6 +80,23 @@ public class CustomStoryAdapter extends BaseAdapter {
                 //mainActivity.finish();
             }
         });
+        if(AppCache.getInstance().getUser().isAdmin()){
+            rowView.setLongClickable(true);
+            rowView.setOnLongClickListener(new View.OnLongClickListener() {
+
+                @Override
+                public boolean onLongClick(View v) {
+                    Service service = new Service("Deleting Story...", mainActivity, new ServiceResponse() {
+                        @Override
+                        public void postExecute(JSONObject resp) {
+                        }
+                    });
+                    StoryService.delete(mainActivity, stories.get(position).getId(), service);
+                    return true;
+                }
+            });
+        }
+
         return rowView;
     }
 

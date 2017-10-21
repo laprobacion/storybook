@@ -73,6 +73,7 @@ public class AddStoryActivity extends AppCompatActivity {
                     addStoryErrMsg.setTextColor(Color.RED);
                     addStoryErrMsg.setVisibility(View.VISIBLE);
                     addStoryErrMsg.setText(err);
+                    saveStoryAddBtn.setEnabled(true);
                 }else{
                     Story story = new Story();
                     story.setTitle(addStoryName.getText().toString().trim());

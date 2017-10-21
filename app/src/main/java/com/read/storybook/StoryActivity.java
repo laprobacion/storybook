@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -73,11 +74,11 @@ public class StoryActivity extends FragmentActivity{
             }
         });
 
-
         title = (TextView) findViewById(R.id.mainStoryTitle);
         story = (Story)getIntent().getSerializableExtra(AppConstants.STORY_OBJ);
         title.setText(story.getTitle());
         searchImages(story);
+
     }
 
     private void searchImages(final Story story){

@@ -14,7 +14,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.read.storybook.model.Level;
+import com.read.storybook.service.LevelService;
+import com.read.storybook.service.Service;
+import com.read.storybook.service.ServiceResponse;
+import com.read.storybook.service.StoryService;
+import com.read.storybook.util.AppCache;
 import com.read.storybook.util.AppConstants;
+
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -22,11 +29,11 @@ import static android.R.attr.level;
 
 public class CustomAdapter extends BaseAdapter {
     List<Level> levels;
-    Activity mainActivity;
+    Context mainActivity;
     int[] imageId;
     private static LayoutInflater inflater = null;
 
-    public CustomAdapter(Activity mainActivity, List<Level> levels) {
+    public CustomAdapter(Context mainActivity, List<Level> levels) {
         // TODO Auto-generated constructor stub
         this.levels = levels;
         this.mainActivity = mainActivity;
@@ -75,6 +82,22 @@ public class CustomAdapter extends BaseAdapter {
                 //mainActivity.finish();
             }
         });
+        if(AppCache.getInstance().getUser().isAdmin()){
+            rowView.setLongClickable(true);
+            rowView.setOnLongClickListener(new View.OnLongClickListener() {
+
+                @Override
+                public boolean onLongClick(View v) {
+                    Service service = new Service("Deleting Level...", mainActivity, new ServiceResponse() {
+                        @Override
+                        public void postExecute(JSONObject resp) {
+                        }
+                    });
+                    LevelService.delete((Activity)mainActivity, levels.get(position).getId(), service);
+                    return true;
+                }
+            });
+        }
         return rowView;
     }
 

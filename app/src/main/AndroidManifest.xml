@@ -15,7 +15,6 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,14 +22,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity" android:screenOrientation="landscape" />
-        <activity android:name=".SignInActivity" android:screenOrientation="landscape" />
-        <activity android:name=".LevelActivity" android:screenOrientation="landscape" />
-        <activity android:name=".StoriesActivity" android:screenOrientation="landscape" />
-        <activity android:name=".AddStoryActivity" android:screenOrientation="landscape" />
-        <activity android:name=".StoryActivity" android:screenOrientation="landscape" />
-        <activity android:name=".AddQuestionActivity" android:screenOrientation="landscape" />
-        <activity android:name=".ExamActivity" android:screenOrientation="landscape"></activity>
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".SignInActivity" />
+        <activity android:name=".LevelActivity" />
+        <activity android:name=".StoriesActivity" />
+        <activity
+            android:name=".AddStoryActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".StoryActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".AddQuestionActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".ExamActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name=".LevelsActivity"></activity>
     </application>
 
 </manifest>

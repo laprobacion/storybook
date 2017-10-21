@@ -1,5 +1,8 @@
 package com.read.storybook.service;
 
+import android.app.Activity;
+import android.content.Context;
+
 import com.loopj.android.http.RequestParams;
 import com.read.storybook.dao.StoryDao;
 import com.read.storybook.dao.UserStoryDao;
@@ -49,6 +52,12 @@ public class StoryService {
 		service.execute();
 	}
 
+	public static void delete(Context activity, String storyId, Service service){
+		RequestParams params = new RequestParams();
+		params.put("storyId", storyId);
+		service.post("http://jabahan.com/storybook/story/delete.php", params);
+		Util.delete(activity,service);
+	}
 	public static int getScore(User user, Story story){
 		return new UserStoryDao().getStoriesAndScores(user).get(story.getId());
 	}

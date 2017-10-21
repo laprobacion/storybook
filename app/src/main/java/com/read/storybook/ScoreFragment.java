@@ -18,6 +18,8 @@ import com.read.storybook.util.AppCache;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
+
 public class ScoreFragment extends Fragment{
 
     View myView;
@@ -48,9 +50,16 @@ public class ScoreFragment extends Fragment{
         JSONArray arr = resp.optJSONArray("records");
         for( int i=0; i< arr.length(); i++){
             JSONObject obj = arr.optJSONObject(i);
-            int percent = (obj.optInt("SCORE") / obj.optInt("ITEM")) * 100;
+            int percent = getPercentage(obj.optInt("SCORE"), obj.optInt("ITEM"));
             sb.append(obj.optString("TITLE") + " = " + percent + "% \r\n");
         }
         tv.setText(sb.toString());
+    }
+
+    public int getPercentage(int s, int i){
+        Double score = Double.valueOf((double)s / (double)i);
+        DecimalFormat df = new DecimalFormat("#.####");
+
+        return ((Double)(Double.parseDouble(df.format(score)) * ((double)100))).intValue();
     }
 }

@@ -30,7 +30,7 @@ public class ServiceMock {
             res = "{\"message\": \"success\", \"isActive\" : \"1\", \"isAdmin\" : \"1\"}";
         }
         if(this.url.indexOf("http://jabahan.com/storybook/level/read.php") > -1){
-            res = "{\"records\" : [ {\"id\":\"123123\",\"name\":\"teslevel\",\"isActive\":\"1\" }]}";
+            res = "{\"records\" : [ {\"id\":\"123123\",\"name\":\"teslevel\",\"isActive\":\"1\" },{\"id\":\"4141\",\"name\":\"second\",\"isActive\":\"1\" }]}";
         }
         if(this.url.indexOf("http://jabahan.com/storybook/story/search.php?") > -1){
             res = "{\"records\" : [ {\"id\":\"123123\",\"name\":\"teslevel\",\"isActive\":\"1\" }]}";

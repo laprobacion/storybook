@@ -6,11 +6,14 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -26,26 +29,28 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class StoriesFragment extends Fragment{
 
     View myView;
-    TextView [] lvlArray;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         myView = inflater.inflate(R.layout.stories_layout, container, false);
-        Button addLevelBtn = (Button)myView.findViewById(R.id.addLevelBtn);
-        addLevelBtn.setOnClickListener(new Button.OnClickListener(){
-            public void onClick(View v){
+        FloatingActionButton fab = (FloatingActionButton) myView.findViewById(R.id.fab);
+             fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 Intent myIntent = new Intent(getActivity(), LevelActivity.class);
                 startActivity(myIntent);
             }
         });
+
         User user = AppCache.getInstance().getUser();
         if(!user.isAdmin()){
-            addLevelBtn.setVisibility(View.INVISIBLE);
+            fab.setVisibility(View.INVISIBLE);
         }
         return myView;
     }
@@ -53,12 +58,6 @@ public class StoriesFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
-        if(lvlArray != null && lvlArray.length > 0){
-            RelativeLayout relativeLayout = (RelativeLayout) myView.findViewById(R.id.storiesRelativeLayout);
-            for(TextView tv : lvlArray){
-                relativeLayout.removeView(tv);
-            }
-        }
         search(myView);
     }
 
@@ -91,39 +90,8 @@ public class StoriesFragment extends Fragment{
         LevelService.read(service);
     }
     private void addLevels(View myView, List<Level> levels){
-        lvlArray = new TextView[levels.size()];
-        TextView parentTv = (TextView)myView.findViewById(R.id.storiesTitle);
-        RelativeLayout relativeLayout = (RelativeLayout) myView.findViewById(R.id.storiesRelativeLayout);
-        RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams( RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
+        ListView lv= myView.findViewById(R.id.list);
+        lv.setAdapter(new CustomAdapter(this.getActivity(), levels));
 
-        int i = 0;
-        int top = 60;
-        for (final Level level : levels  ) {
-            TextView tv = new TextView(getActivity().getApplicationContext());
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams( RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            tv.setId(i);
-            tv.setText(level.getName());
-            tv.setTextColor(Color.BLACK);
-            lvlArray[i] = tv;
-            lp.addRule(RelativeLayout.BELOW , parentTv.getId());
-            if( i == 0){
-                lp.setMargins(100,10,0,0);
-            }else{
-                lp.setMargins(100,top,0,0);
-                top += 50;
-            }
-
-            tv.setLayoutParams(lp);
-            relativeLayout.addView(tv);
-            tv.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Intent myIntent = new Intent(getActivity(), StoriesActivity.class);
-                    myIntent.putExtra(AppConstants.LEVEL_NAME,level);
-                    StoriesFragment.this.startActivity(myIntent);
-                }
-            });
-
-            i++;
-        }
     }
 }

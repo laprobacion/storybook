@@ -90,10 +90,10 @@ public class Service extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
         //remove mock
-        /**if(true){
-            response = new ServiceMock(url).getResp();
-            return null;
-        }**/
+        //if(true){
+            //response = new ServiceMock(url).getResp();
+            //return null;
+       // }
 
         SyncHttpClient client = new SyncHttpClient();
 

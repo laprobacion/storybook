@@ -27,6 +27,7 @@ import com.read.storybook.util.AppConstants;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -157,6 +158,13 @@ public class AddStoryActivity extends AppCompatActivity {
                 } else {
                     selectedImage = data.getClipData().getItemAt(i).getUri();
                 }
+                String sizeValidate = validateSize(selectedImage);
+                if(sizeValidate!=null){
+                    addStoryErrMsg.setTextColor(Color.RED);
+                    addStoryErrMsg.setVisibility(View.VISIBLE);
+                    addStoryErrMsg.setText(sizeValidate);
+                    throw new RuntimeException("sizeValidate");
+                }
                 if(i != 0){
                     parentId = arrIds[i-1];
                 }
@@ -199,6 +207,15 @@ public class AddStoryActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    public String validateSize(Uri uri){
+        File file =new File(uri.getPath());
+        double bytes = file.length();
+        double kilobytes = (bytes / 1024);
+        if(kilobytes > 301){
+            return "Image must be less than 300kb";
+        }
+        return null;
+    }
     public String getFileName(Uri uri) {
         String result = null;
         if (uri.getScheme().equals("content")) {

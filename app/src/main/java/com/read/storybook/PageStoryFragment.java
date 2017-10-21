@@ -55,7 +55,8 @@ public class PageStoryFragment extends Fragment {
         messageTextView.setText("");
         ImageView iv = (ImageView) v.findViewById(R.id.imageStory);
         iv.setImageBitmap(bitmap);
-
+        iv.setMaxWidth(800);
+        iv.setMaxHeight(500);
         Button takeExam =  (Button)v.findViewById(R.id.takeExam);
         if(isLast && story !=null && story.getQuestions() != null && story.getQuestions().size() > 0){
             takeExam.setVisibility(View.VISIBLE);

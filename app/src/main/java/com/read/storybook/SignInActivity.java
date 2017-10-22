@@ -55,6 +55,8 @@ public class SignInActivity extends AppCompatActivity {
                         errorMsg.setVisibility(View.VISIBLE);
                         errorMsg.setText(resp.getString("message"));
                     }else{
+                        user.setId(resp.optString("id"));
+                        user.setUsername(resp.optString("username"));
                         user.setActive(resp.optInt("isActive") == 1);
                         user.setAdmin(resp.optInt("isAdmin") == 1);
                         Storage.save(SignInActivity.this.getApplicationContext(),user);

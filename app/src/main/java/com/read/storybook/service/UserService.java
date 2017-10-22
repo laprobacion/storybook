@@ -27,7 +27,8 @@ public class UserService {
 
 	public static void register(final User user, Service service){
 		RequestParams params = new RequestParams();
-		params.put("id", Util.generateId());
+		user.setId(Util.generateId());
+		params.put("id", user.getId());
 		params.put("username", user.getUsername());
 		String pass = Encryptor.encrypt(user.getPassword());
 		params.put("password", pass);

@@ -26,16 +26,18 @@ public class PageStoryFragment extends Fragment {
     public static final String IMAGE = "IMAGE";
     public static final String IS_LAST = "IS_LAST";
     public static final String STORY = "STORY";
+    public static final String PAGING = "PAGING";
 
     public PageStoryFragment() {    }
 
-    public static final PageStoryFragment newInstance(String message, Bitmap bitmap, boolean isLast, Story story)
+    public static final PageStoryFragment newInstance(String message, Bitmap bitmap, boolean isLast, Story story, String paging)
     {
         PageStoryFragment f = new PageStoryFragment();
         Bundle bdl = new Bundle(1);
         bdl.putString(PAGE_TITLE, message);
         bdl.putParcelable(IMAGE, bitmap);
         bdl.putBoolean(IS_LAST,isLast);
+        bdl.putString(PAGING, paging);
         if(isLast) {
             bdl.putSerializable(STORY, story);
         }
@@ -71,6 +73,8 @@ public class PageStoryFragment extends Fragment {
                getActivity().finish();
             }
         });
+        TextView pageNo = v.findViewById(R.id.paging);
+        pageNo.setText(getArguments().getString(PAGING));
         return v;
     }
 

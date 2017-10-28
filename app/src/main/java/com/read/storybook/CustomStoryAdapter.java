@@ -4,6 +4,7 @@ package com.read.storybook;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -65,8 +66,11 @@ public class CustomStoryAdapter extends BaseAdapter {
         // TODO Auto-generated method stub
         Holder holder=new Holder();
         View rowView;
-        rowView = inflater.inflate(R.layout.list_row, null);
+        rowView = inflater.inflate(R.layout.list_story_row, null);
         holder.tv=(TextView) rowView.findViewById(R.id.textView1);
+        holder.img = (ImageView) rowView.findViewById(R.id.default_icon);
+        holder.img.setImageBitmap(BitmapFactory.decodeResource(mainActivity.getResources(),
+                R.drawable.icons_open_book));
         //holder.img=(ImageView) rowView.findViewById(R.id.imageView1);
         holder.tv.setText(stories.get(position).getTitle().toString());
         //holder.img.setImageResource(imageId[position]);

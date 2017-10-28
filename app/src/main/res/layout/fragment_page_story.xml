@@ -26,6 +26,7 @@
         android:layout_marginTop="32dp"
         />
 
+
     <Button
         android:id="@+id/takeExam"
         android:layout_width="wrap_content"
@@ -38,4 +39,13 @@
         android:layout_marginRight="13dp"
         android:text="Take Exam"
         android:visibility="invisible"/>
+
+    <TextView
+        android:id="@+id/paging"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/takeExam"
+        android:layout_alignLeft="@+id/imageStory"
+        android:layout_alignStart="@+id/imageStory"
+        android:text="Page" />
 </RelativeLayout>

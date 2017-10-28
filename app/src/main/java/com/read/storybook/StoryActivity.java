@@ -53,7 +53,8 @@ public class StoryActivity extends FragmentActivity{
         int ctr = 0;
 
         for(Image i : story.getImages()){
-            fList.add(PageStoryFragment.newInstance(title.getText().toString(), i.getBitmap(), (ctr + 1) == story.getImages().size(), tempStory));
+            String page = (ctr + 1) + " of " + story.getImages().size();
+            fList.add(PageStoryFragment.newInstance(title.getText().toString(), i.getBitmap(), (ctr + 1) == story.getImages().size(), tempStory, page));
             ctr++;
         }
         return fList;

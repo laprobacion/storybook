@@ -64,7 +64,9 @@ public class StoriesActivity extends AppCompatActivity {
             public void postExecute(JSONObject resp) {
                 try {
                     if (resp.optString("records") != null) {
-                        addStories(createList(resp));
+                        List<Story> stories = createList(resp);
+                        setStoryIcon(stories);
+                        addStories(stories);
                     }else{
 
                     }
@@ -74,6 +76,19 @@ public class StoriesActivity extends AppCompatActivity {
         StoryService.search(level.getId(),service);
     }
 
+    private void setStoryIcon(final List<Story> stories){
+        Service service = new Service("Searching story...", StoriesActivity.this, new ServiceResponse() {
+            @Override
+            public void postExecute(JSONObject resp) {
+                try {
+                   //empty
+                }catch (Exception e){e.printStackTrace();}
+            }
+        });
+        for(Story s: stories){
+            StoryService.setStoryIcon(s, service);
+        }
+    }
     private List<Story> createList(JSONObject resp){
         List<Story> stories = new ArrayList<Story>();
         JSONArray arr = resp.optJSONArray("records");
@@ -83,6 +98,7 @@ public class StoriesActivity extends AppCompatActivity {
             story.setId(obj.optString("id"));
             story.setTitle(obj.optString("name"));
             story.setActive(obj.optInt("isActive") == 1);
+            story.setCover(obj.optString("cover"));
             stories.add(story);
         }
         return stories;

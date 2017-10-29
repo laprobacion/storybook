@@ -2,7 +2,7 @@ package com.read.storybook.util;
 
 
 public class AppConstants {
-
+    public static final String METHOD_POST_STORY = "METHOD_POST_STORY";
     public static final String METHOD_POST = "restPost";
     public static final String METHOD_GET = "restGet";
     public static final String METHOD_IMG_UPLOAD = "METHOD_IMG_UPLOAD";

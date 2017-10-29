@@ -3,11 +3,9 @@ package com.read.storybook.service;
 import android.app.Activity;
 
 import com.loopj.android.http.RequestParams;
-import com.read.storybook.dao.LevelDao;
 import com.read.storybook.model.Level;
 import com.read.storybook.model.Story;
 import com.read.storybook.model.User;
-import com.read.storybook.util.Encryptor;
 import com.read.storybook.util.Util;
 
 public class LevelService {
@@ -39,12 +37,6 @@ public class LevelService {
 		}
 		return score;
 	}
-	
-	public static void save(Level level){
-		new LevelDao().save(level);
-	}
-	
-	public static void saveChild(Level level){
-		new LevelDao().saveChild(level);
-	}
+
+
 }

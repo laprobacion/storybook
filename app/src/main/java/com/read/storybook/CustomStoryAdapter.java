@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.hardware.camera2.params.BlackLevelPattern;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -71,6 +73,13 @@ public class CustomStoryAdapter extends BaseAdapter {
         holder.img = (ImageView) rowView.findViewById(R.id.default_icon);
         holder.img.setImageBitmap(BitmapFactory.decodeResource(mainActivity.getResources(),
                 R.drawable.icons_open_book));
+
+        final Story s = stories.get(position);
+        if(s.getCoverBitmap() != null){
+            holder.img.setBackgroundColor(Color.BLUE);
+            holder.img.setPadding(1,1,1,1);
+            holder.img.setImageBitmap(s.getCoverBitmap());
+        }
         //holder.img=(ImageView) rowView.findViewById(R.id.imageView1);
         holder.tv.setText(stories.get(position).getTitle().toString());
         //holder.img.setImageResource(imageId[position]);
@@ -79,7 +88,8 @@ public class CustomStoryAdapter extends BaseAdapter {
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 Intent myIntent = new Intent(mainActivity, StoryActivity.class);
-                myIntent.putExtra(AppConstants.STORY_OBJ,stories.get(position));
+                s.setCoverBitmap(null);
+                myIntent.putExtra(AppConstants.STORY_OBJ,s);
                 mainActivity.startActivity(myIntent);
                 //mainActivity.finish();
             }
@@ -95,7 +105,7 @@ public class CustomStoryAdapter extends BaseAdapter {
                         public void postExecute(JSONObject resp) {
                         }
                     });
-                    StoryService.delete(mainActivity, stories.get(position).getId(), service);
+                    StoryService.delete(mainActivity, s.getId(), service);
                     return true;
                 }
             });

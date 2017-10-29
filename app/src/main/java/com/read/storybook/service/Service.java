@@ -5,6 +5,7 @@ package com.read.storybook.service;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.widget.ProgressBar;
@@ -62,6 +63,10 @@ public class Service extends AsyncTask<Void, Void, Void> {
         this.url = url;
         this.rp = params;
         this.method = AppConstants.METHOD_POST;
+    }
+    public void postStory(Story story){
+        this.story = story;
+        this.method = AppConstants.METHOD_POST_STORY;
     }
     public void get(String url, RequestParams params){
         this.url = url;
@@ -144,19 +149,39 @@ public class Service extends AsyncTask<Void, Void, Void> {
 
         }else if (this.method.equals(AppConstants.RETRIEVE_IMG)){
             try {
+                story.setCoverBitmap(createBitmap(story.getCover()));
                 for(Image image : story.getImages()){
-                    URL url = new URL(image.getUrl());
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                    connection.setDoInput(true);
-                    connection.connect();
-                    InputStream input = connection.getInputStream();
-                    image.setBitmap(BitmapFactory.decodeStream(input));
+
+                    image.setBitmap(createBitmap(image.getUrl()));
                 }
                 response = new JSONObject(" {\"dummy\":\"dummy\"} ");
             }catch (Exception e){
                 e.printStackTrace();
             }
 
+        }else if (this.method.equals(AppConstants.METHOD_POST_STORY)){
+            try {
+                story.setCoverBitmap(createBitmap(story.getCover()));
+                response = new JSONObject(" {\"dummy\":\"dummy\"} ");
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
+
+        return null;
+    }
+
+    private Bitmap createBitmap(String urlParam){
+        try {
+            URL url = new URL(urlParam);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            return BitmapFactory.decodeStream(input);
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return null;
     }

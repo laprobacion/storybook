@@ -15,11 +15,11 @@ public class Story extends BaseModel{
 	
 	
 	private String title;
-	private String body;
+	private String cover;
 	private List<Image> images;
 	//-- Transient
 	private List<Question> questions;
-
+	private Bitmap coverBitmap;
 	public void setQuestions(List<Question> questions) {
 		this.questions = questions;
 	}
@@ -44,13 +44,12 @@ public class Story extends BaseModel{
 		this.title = title;
 	}
 
-	public String getBody() {
-		//XXX: PUT IT BACK
-		return "";
+	public String getCover() {
+		return cover;
 	}
 
-	public void setBody(String body) {
-		this.body = body;
+	public void setCover(String cover) {
+		this.cover = cover;
 	}
 
 	public List<Question> getQuestions() {
@@ -69,5 +68,11 @@ public class Story extends BaseModel{
 		this.maxQuestion = maxQuestion;
 	}
 
-	
+	public Bitmap getCoverBitmap() {
+		return coverBitmap;
+	}
+
+	public void setCoverBitmap(Bitmap coverBitmap) {
+		this.coverBitmap = coverBitmap;
+	}
 }

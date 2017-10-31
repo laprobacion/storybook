@@ -33,5 +33,6 @@
         android:layout_alignStart="@+id/usernameLbl"
         android:layout_below="@+id/usernameLbl"
         android:layout_marginTop="31dp"
-        android:text="Achievements" />
+        android:text="Achievements"
+        android:visibility="invisible"/>
 </RelativeLayout>

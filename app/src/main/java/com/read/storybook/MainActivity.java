@@ -31,13 +31,15 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        // Checks if the user has previously signed in, no need to ask to register/sign in again.
         if( isSignedIn() ){
-            ((Button)findViewById(R.id.registerBtn)).setVisibility(View.INVISIBLE);
-            ((Button)findViewById(R.id.signInBtn)).setVisibility(View.INVISIBLE);
-            ((DrawerLayout) findViewById(R.id.drawer_layout)).setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED );
+            ((Button)findViewById(R.id.registerBtn)).setVisibility(View.INVISIBLE); // Show Register button
+            ((Button)findViewById(R.id.signInBtn)).setVisibility(View.INVISIBLE);   // Show SignIn button
+            ((DrawerLayout) findViewById(R.id.drawer_layout)).setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED ); // Unlock the Nagivation Drawer
 
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             View header=navigationView.getHeaderView(0);
+            // Set the username in Navigation Drawer header
             TextView name = (TextView)header.findViewById(R.id.headerName);
             name.setText(Storage.load(getApplicationContext()));
         }else{
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    //Checks if the user has previously signed in.
     private boolean isSignedIn(){
         String username = Storage.load(getApplicationContext());
         if(AppCache.getInstance().getUser() == null){
@@ -56,6 +59,7 @@ public class MainActivity extends AppCompatActivity
         return( username != null && !username.equals(""));
     }
 
+    // Get the username saved in the mobile and retrieve the User information.
     private void login(final User user){
         final TextView errorMsg = (TextView) findViewById(R.id.mainContentErrMsg);
         Service service = new Service("Searching user...", MainActivity.this, new ServiceResponse() {
@@ -71,7 +75,7 @@ public class MainActivity extends AppCompatActivity
                         user.setAdmin(resp.optInt("isAdmin") == 1);
                         user.setId(resp.optString("id"));
                         String pass = resp.optString("password").replace("\n","");
-                        user.setPassword(Encryptor.decrypt(pass)); // REMOVE AFTER MOCK
+                        user.setPassword(Encryptor.decrypt(pass));
 
                         AppCache.getInstance().setUser(user);
                     }
@@ -81,6 +85,7 @@ public class MainActivity extends AppCompatActivity
         UserService.search(user, service);
     }
 
+    //Draw the Page/Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,7 +102,6 @@ public class MainActivity extends AppCompatActivity
         });
 
 
-
         Button signInBtn = (Button)findViewById(R.id.signInBtn);
         signInBtn.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
@@ -105,13 +109,6 @@ public class MainActivity extends AppCompatActivity
                 MainActivity.this.startActivity(myIntent);
             }
         });
-        //If not yet signed in
-        /**if ( !clause ) {
-         signInBtn.setVisibility(View.GONE);
-         }**/
-
-
-
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -158,6 +155,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    //Navigation Drawer links
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {

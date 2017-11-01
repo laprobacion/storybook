@@ -60,6 +60,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    // Save the fields in Database
     private void register(final User user){
         final TextView errorMsg = (TextView) findViewById(R.id.errorMsg);
         Service service = new Service("Adding user...", RegisterActivity.this, new ServiceResponse() {
@@ -80,7 +81,7 @@ public class RegisterActivity extends AppCompatActivity {
         UserService.register(user, service);
     }
 
-
+    //Validate fields.
     private String validate(final String username, String password1, String password2){
         if(username.trim().equals("")){
             return "Username cannot be empty";

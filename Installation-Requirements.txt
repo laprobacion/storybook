@@ -5,5 +5,7 @@
 	-> System Settings -> Android SDK
 3.2) Under SDK Platforms tab, make sure Android 8.0 and Android 7.1.1
 are installed.
-4.) Plug an android device to Computer's USB and make sure the mobile is in USB Debugging Mode or Enable Debugging Mode.
-5.) Android Studio, Click Run -> Run App. The application will be installed in the mobile device.
+4.) Open and Extract the zipped file (storybook-master.zip).
+5.) Open Android Studio -> File -> New -> Import Project -> locate the extracted file (step 4)
+6.) Plug an android device to Computer's USB and make sure the mobile is in USB Debugging Mode or Enable Debugging Mode.
+7.) Android Studio, Click Run -> Run App. The application will be installed in the mobile device.

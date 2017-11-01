@@ -44,6 +44,8 @@ public class SignInActivity extends AppCompatActivity {
             }
         });
     }
+
+    //Validate the entered username and password from the database.
     private void login(final User user){
         final TextView errorMsg = (TextView) findViewById(R.id.signInErrMsg);
         Service service = new Service("Signing in...", SignInActivity.this, new ServiceResponse() {
@@ -68,6 +70,7 @@ public class SignInActivity extends AppCompatActivity {
         UserService.login(user, service);
     }
 
+    //Validate the fields.
     private String validate(String username, String password){
         if(username.trim().equals("")){
             return "Username cannot be empty";

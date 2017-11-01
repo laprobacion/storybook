@@ -50,7 +50,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }else {
                     final User user = new User();
                     user.setUsername(username.getText().toString());
-                    user.setAdmin(false);
+                    user.setAdmin(true);
                     user.setPassword(password.getText().toString());
                     user.setActive(true);
 

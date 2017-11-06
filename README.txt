@@ -8,7 +8,8 @@ XML
 Android API
 REST API
 
-
+Out of scope - as agreed, only android codes will be delivered. 
+REST, Hosting and Database services are free to use as part of the application.
 (REST)
 PHP
 SQL

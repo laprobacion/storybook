@@ -212,8 +212,8 @@ public class AddStoryActivity extends AppCompatActivity {
         File file =new File(uri.getPath());
         double bytes = file.length();
         double kilobytes = (bytes / 1024);
-        if(kilobytes > 301){
-            return "Image must be less than 300kb";
+        if(kilobytes > 401){
+            return "Image must be less than 400kb";
         }
         return null;
     }

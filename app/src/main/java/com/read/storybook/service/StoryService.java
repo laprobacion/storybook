@@ -17,8 +17,10 @@ import java.util.Map;
 
 public class StoryService {
 	public static void setStoryIcon(Story story, Service service){
-		service.postStory(story);
-		service.execute();
+		if(!story.getCover().equals("null")) {
+			service.postStory(story);
+			service.execute();
+		}
 	}
 	public static void populateImages(Story story, Service service){
 		service.getImages(story);

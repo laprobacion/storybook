@@ -174,12 +174,14 @@ public class Service extends AsyncTask<Void, Void, Void> {
 
     private Bitmap createBitmap(String urlParam){
         try {
-            URL url = new URL(urlParam);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            return BitmapFactory.decodeStream(input);
+            if(urlParam != null && !urlParam.equals("null")) {
+                URL url = new URL(urlParam);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                return BitmapFactory.decodeStream(input);
+            }
         }catch (Exception e){
             e.printStackTrace();
         }

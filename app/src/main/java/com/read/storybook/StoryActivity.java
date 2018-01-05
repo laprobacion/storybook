@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
@@ -30,6 +32,7 @@ import com.read.storybook.service.ServiceResponse;
 import com.read.storybook.service.StoryService;
 import com.read.storybook.util.AppCache;
 import com.read.storybook.util.AppConstants;
+import com.read.storybook.util.Player;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -44,10 +47,12 @@ import java.util.List;
 
 public class StoryActivity extends FragmentActivity{
     Story story;
-    TextView title;
+    TextView title,status;
     MyPageAdapter pageAdapter;
     Story tempStory = new Story();
-    Button createExam;
+    Button createExam,btnNarrative,btnLesson;
+    Button playAudio;
+    Player mediaPlayer;
     private List<Fragment> getFragments() {
         List<Fragment> fList = new ArrayList<Fragment>();
         int ctr = 0;
@@ -63,7 +68,52 @@ public class StoryActivity extends FragmentActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_story);
+        status = (TextView) findViewById(R.id.status);
+        status.setTextSize(10);
         createExam = (Button) findViewById(R.id.createExam);
+        playAudio = (Button) findViewById(R.id.playAudio);
+        playAudio.setEnabled(false);
+        mediaPlayer = new Player(status,playAudio);
+        playAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mediaPlayer.isPlaying()){
+                    playAudio.setBackground(getDrawable(R.drawable.mic_unmute));
+                    mediaPlayer.stop();
+                }else{
+                    playAudio.setBackground(getDrawable(R.drawable.mic_mute));
+                    mediaPlayer.play();
+                }
+                playAudio.invalidate();
+            }
+        });
+        btnNarrative = (Button) findViewById(R.id.btnNarrative);
+        btnNarrative.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                Intent myIntent = new Intent(StoryActivity.this, AddLessonNarrativeActivity.class);
+                myIntent.putExtra(AppConstants.STORY_ID,story.getId());
+                myIntent.putExtra(AppConstants.STORY_NARRATIVE,story.getId());
+                StoryActivity.this.startActivity(myIntent);
+                finish();
+            }
+        });
+        btnLesson = (Button) findViewById(R.id.btnLesson);
+        btnLesson.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                Intent myIntent = new Intent(StoryActivity.this, AddLessonNarrativeActivity.class);
+                myIntent.putExtra(AppConstants.STORY_ID,story.getId());
+                myIntent.putExtra(AppConstants.STORY_LESSON,story.getId());
+                StoryActivity.this.startActivity(myIntent);
+                mediaPlayer.stop();
+                finish();
+            }
+        });
+            //remove this
+            btnLesson.setVisibility(View.VISIBLE);
         createExam.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -71,6 +121,7 @@ public class StoryActivity extends FragmentActivity{
                 Intent myIntent = new Intent(StoryActivity.this, AddQuestionActivity.class);
                 myIntent.putExtra(AppConstants.STORY_ID,story.getId());
                 StoryActivity.this.startActivity(myIntent);
+                mediaPlayer.stop();
                 finish();
             }
         });
@@ -102,11 +153,13 @@ public class StoryActivity extends FragmentActivity{
                     pageAdapter = new MyPageAdapter(getSupportFragmentManager(), fragments);
                     ViewPager pager = (ViewPager)findViewById(R.id.viewpager);
                     pager.setAdapter(pageAdapter);
+                    playAudio(story);
                 }catch (Exception e){e.printStackTrace();}
             }
         });
         StoryService.populateImages(story, service);
     }
+
     private void getImages(JSONObject resp, Story story){
         JSONArray arr = resp.optJSONArray("records");
         for( int i=0; i< arr.length(); i++){
@@ -152,8 +205,11 @@ public class StoryActivity extends FragmentActivity{
                     tempStory.setId(storyId);
                     tempStory.setQuestions( createQuestions(resp));
                     User user = AppCache.getInstance().getUser();
-                    if(user.isAdmin() && tempStory != null && tempStory.getQuestions() != null && tempStory.getQuestions().size() == 0){
+                    if(user.isAdmin() && tempStory != null && tempStory.getQuestions() == null){
                         createExam.setVisibility(View.VISIBLE);
+                    }
+                    if(user.isAdmin() && story.getSound() == null){
+                        btnNarrative.setVisibility(View.VISIBLE);
                     }
                     getBitmaps(story);
                 }catch (Exception e){e.printStackTrace();}
@@ -162,4 +218,16 @@ public class StoryActivity extends FragmentActivity{
         QuestionService.getQuestions(storyId, service);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        mediaPlayer.stop();
+    }
+    private void playAudio(final Story story){
+        if(story.getSound() != null){
+            mediaPlayer.execute(story.getSound().getUrl());
+            playAudio.setVisibility(View.VISIBLE);
+            status.setVisibility(View.VISIBLE);
+        }
+    }
 }

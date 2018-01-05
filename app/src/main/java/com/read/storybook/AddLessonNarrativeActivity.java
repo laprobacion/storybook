@@ -1,22 +1,21 @@
 package com.read.storybook;
 
-
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -30,37 +29,61 @@ import com.read.storybook.util.AppConstants;
 
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AddStoryActivity extends AppCompatActivity {
-    Button uploadBtn;
+public class AddLessonNarrativeActivity extends AppCompatActivity {
+
+    Button btnAction;
     EditText arrImageView [];
     EditText arrEditTxt [];
-    EditText addStoryName ;
     Image[] image;
-    TextView addStoryErrMsg;
-    String levelId;
+    TextView addStoryErrMsg,filename;
+    Uri soundUri;
+    String soundUrl;
+    String storyId;
+    static final String IMAGE_STR = "Upload Image";
+    static final String SOUND_STR = "Upload Sound";
+    MediaPlayer player;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_story);
-        levelId = getIntent().getStringExtra(AppConstants.LEVEL_ID);
-        addStoryName = (EditText)findViewById(R.id.addStoryName);
+        setContentView(R.layout.activity_add_lesson_narrative);
+        storyId = getIntent().getStringExtra(AppConstants.STORY_ID);
         addStoryErrMsg = (TextView)findViewById(R.id.addStoryErrMsg);
+        filename = (TextView)findViewById(R.id.filename);
+        btnAction = (Button) findViewById(R.id.btnAction);
 
-        uploadBtn = (Button) findViewById(R.id.uploadImageBtn);
-        uploadBtn.setOnClickListener(new View.OnClickListener() {
+        if(getIntent().getStringExtra(AppConstants.STORY_LESSON) != null){
+            btnAction.setText(IMAGE_STR);
+            filename.setVisibility(View.INVISIBLE);
+        }else{
+            btnAction.setText(SOUND_STR);
+            filename.setVisibility(View.VISIBLE);
+        }
+        player = new MediaPlayer();
+        btnAction.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
                 Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent,"Select Picture"), 1);
+                if(btnAction.getText().toString().equals(IMAGE_STR)){
+                    intent.setType("image/*");
+                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                    startActivityForResult(Intent.createChooser(intent,"Select Picture"), 1);
+                }else{
+                    intent.setType("audio/*");
+                    startActivityForResult(Intent.createChooser(intent,"Select Audio"), 2);
+                }
+
             }
 
         });
@@ -79,13 +102,26 @@ public class AddStoryActivity extends AppCompatActivity {
                     saveStoryAddBtn.setEnabled(true);
                 }else{
                     Story story = new Story();
-                    story.setTitle(addStoryName.getText().toString().trim());
-                    for(int i=0; i< arrImageView.length; i++){
-                        image[i].setPriority(arrEditTxt[i].getText().toString().trim());
-                        story.addImage(image[i]);
+                    story.setId(getIntent().getStringExtra(AppConstants.STORY_ID));
+                    if(getIntent().getStringExtra(AppConstants.STORY_LESSON) != null) {
+                        for (int i = 0; i < arrImageView.length; i++) {
+                            image[i].setPriority(arrEditTxt[i].getText().toString().trim());
+                            story.addImage(image[i]);
+                        }
+                        addLesson(story);
+                        saveStoryAddBtn.setEnabled(true);
+                    }else{
+                        try {
+                            Sound sound = new Sound(soundUrl);
+                            sound.setByteArrayOutputStream(audioStream());
+                            sound.setExt(getContentResolver().getType(soundUri));
+                            story.setSound(sound);
+                            addNarrative(story);
+                            saveStoryAddBtn.setEnabled(true);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                     }
-                    create(story);
-                    saveStoryAddBtn.setEnabled(true);
                 }
             }
 
@@ -93,8 +129,8 @@ public class AddStoryActivity extends AppCompatActivity {
 
     }
 
-    private void create(final Story story){
-        Service service = new Service("Creating Story...", AddStoryActivity.this, new ServiceResponse() {
+    private void addLesson(final Story story){
+        Service service = new Service("Updating Story...", AddLessonNarrativeActivity.this, new ServiceResponse() {
             @Override
             public void postExecute(JSONObject resp) {
                 try {
@@ -108,28 +144,48 @@ public class AddStoryActivity extends AppCompatActivity {
                 }catch (Exception e){e.printStackTrace();}
             }
         });
-        StoryService.create(levelId, story, service);
+        StoryService.addLesson(story, service);
     }
 
+    private void addNarrative(final Story story){
+        Service service = new Service("Updating Story...", AddLessonNarrativeActivity.this, new ServiceResponse() {
+            @Override
+            public void postExecute(JSONObject resp) {
+                try {
+                    if (resp.getString("message").equals("Success")) {
+                        finish();
+                    }else{
+                        addStoryErrMsg.setTextColor(Color.RED);
+                        addStoryErrMsg.setVisibility(View.VISIBLE);
+                        addStoryErrMsg.setText(resp.getString("message"));
+                    }
+                }catch (Exception e){e.printStackTrace();}
+            }
+        });
+        StoryService.addNarrative(story, service);
+    }
     private String validate(){
-        if(addStoryName.getText().toString().trim().equals("")){
-            return "Story Name cannot be empty.";
-        }
-        if(arrImageView == null){
-            return "No image selected.";
-        }
-        Set<String> prs = new HashSet<String>();
-        for(EditText et: arrEditTxt){
-            if(et.getText().toString().trim().equals("")){
-               return "Priority cannot be empty";
+        if(btnAction.getText().toString().equals(IMAGE_STR)) {
+            if (arrImageView == null) {
+                return "No image selected.";
             }
-            try{
-                Integer.parseInt(et.getText().toString().trim());
-            }catch (NumberFormatException e){
-                return "Priority must be a number";
+            Set<String> prs = new HashSet<String>();
+            for (EditText et : arrEditTxt) {
+                if (et.getText().toString().trim().equals("")) {
+                    return "Priority cannot be empty";
+                }
+                try {
+                    Integer.parseInt(et.getText().toString().trim());
+                } catch (NumberFormatException e) {
+                    return "Priority must be a number";
+                }
+                if (!prs.add(et.getText().toString().trim())) {
+                    return "Duplicate Priority";
+                }
             }
-            if (!prs.add(et.getText().toString().trim())) {
-                return "Duplicate Priority";
+        }else{
+            if(soundUri == null){
+                return "No sound selected.";
             }
         }
         return null;
@@ -137,15 +193,31 @@ public class AddStoryActivity extends AppCompatActivity {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(data != null && resultCode == Activity.RESULT_OK) {
-            if (requestCode == 1 ) {
+            if(requestCode == 2){
+                soundUri = data.getData();
+                String sizeValidate = validateSoundSize(soundUri);
+                if(sizeValidate != null){
+                    addStoryErrMsg.setTextColor(Color.RED);
+                    addStoryErrMsg.setVisibility(View.VISIBLE);
+                    addStoryErrMsg.setText(sizeValidate);
+                    soundUri = null;
+                    throw new RuntimeException("sizeValidate");
+                }else{
+                    addStoryErrMsg.setVisibility(View.INVISIBLE);
+                }
+                soundUrl = soundUri.getPath();
+                filename.setText(getFileName(soundUri));
+
+                //audioStream();
+            }else if (requestCode == 1 ) {
                 if (arrImageView != null && arrImageView.length > 0) {
-                    RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.activityStoryLayout);
+                    RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.addLessonNarrativeParent);
                     for (int i = 0; i < arrImageView.length; i++) {
                         relativeLayout.removeView(arrImageView[i]);
                         relativeLayout.removeView(arrEditTxt[i]);
                     }
                 }
-                RelativeLayout layout = (RelativeLayout) findViewById(R.id.activityStoryLayout);
+                RelativeLayout layout = (RelativeLayout) findViewById(R.id.addLessonNarrativeParent);
                 int count = 1;
                 if (data.getClipData() != null) {
                     count = data.getClipData().getItemCount();
@@ -157,7 +229,7 @@ public class AddStoryActivity extends AppCompatActivity {
                 int top = 300;
                 for (int i = 0; i < count; i++) {
                     Uri selectedImage = null;
-                    int parentId = uploadBtn.getId();
+                    int parentId = btnAction.getId();
                     if (count == 1) {
                         selectedImage = data.getData();
                     } else {
@@ -187,12 +259,12 @@ public class AddStoryActivity extends AppCompatActivity {
                     RelativeLayout.LayoutParams lpTxt = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                     lpTxt.width = 100;
                     lpTxt.height = 200;
-                    EditText txtPriority = new EditText(AddStoryActivity.this);
+                    EditText txtPriority = new EditText(AddLessonNarrativeActivity.this);
                     txtPriority.setInputType(InputType.TYPE_CLASS_NUMBER);
                     txtPriority.setHint("1");
                     lpTxt.setMargins(100, top + 65, 0, 0);
                     txtPriority.setLayoutParams(lpTxt);
-                    EditText imageView = new EditText(AddStoryActivity.this);
+                    EditText imageView = new EditText(AddLessonNarrativeActivity.this);
                     imageView.setEnabled(false);
                     imageView.setId(i);
                     imageView.setText(getFileName(selectedImage));
@@ -222,6 +294,16 @@ public class AddStoryActivity extends AppCompatActivity {
         }
         return null;
     }
+    public String validateSoundSize(Uri uri){
+        File file =new File(uri.getPath());
+        double bytes = file.length();
+        double kilobytes = (bytes / 1024);
+        double megabytes = (kilobytes / 1024);
+        if(megabytes > 6){
+            return "Image must be less than 6mb";
+        }
+        return null;
+    }
     public String getFileName(Uri uri) {
         String result = null;
         if (uri.getScheme().equals("content")) {
@@ -242,5 +324,28 @@ public class AddStoryActivity extends AppCompatActivity {
             }
         }
         return result;
+    }
+
+    private ByteArrayOutputStream audioStream(){
+        String name = getFileName(soundUri);
+        File file = new File(getCacheDir(),name);
+        int maxBufferSize = 1 * 1024 * 1024;
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(soundUri);
+            int  bytesAvailable = inputStream.available();
+            int bufferSize = Math.min(bytesAvailable, maxBufferSize);
+            final byte[] buffers = new byte[bufferSize];
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            int read = 0;
+            while ((read = inputStream.read(buffers)) != -1) {
+                outputStream.write(buffers, 0, read);
+            }
+            return outputStream;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

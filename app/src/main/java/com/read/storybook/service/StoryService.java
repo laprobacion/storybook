@@ -26,6 +26,7 @@ public class StoryService {
 		service.getImages(story);
 		service.execute();
 	}
+
 	public static void create(String levelId, final Story story, Service service){
 		//service.post("http://jabahan.com/storybook/story/create.php", params);
 		HashMap<String,String> data = new HashMap<String,String> ();
@@ -45,7 +46,32 @@ public class StoryService {
 		service.post("http://jabahan.com/storybook/story/create.php", data);
 		service.execute();
 	}
+	public static void addLesson(final Story story, Service service){
+		HashMap<String,String> data = new HashMap<String,String> ();
+		data.put("id", story.getId());
+		data.put("imageCount", String.valueOf(story.getImages().size()));
+		int i=0;
+		for (Image image : story.getImages()){
+			int id = i+1;
+			data.put("imageid"+id, Util.generateId());
+			data.put("priority"+id, image.getPriority());
+			data.put("image"+id, image.getEncodedBitmap());
+			data.put("ext"+id, image.getExtension());
+			i++;
+		}
+		service.post("http://jabahan.com/storybook/story/addLesson.php", data);
+		service.execute();
+	}
 
+	public static void addNarrative(final Story story, Service service){
+		//service.post("http://jabahan.com/storybook/story/create.php", params);
+		HashMap<String,String> data = new HashMap<String,String> ();
+		data.put("id", story.getId());
+		data.put("narrative", story.getSound().getEncoded());
+		data.put("ext", story.getSound().getExt());
+		service.post("http://jabahan.com/storybook/story/addNarrative.php", data);
+		service.execute();
+	}
     public static void search(String levelId, Service service){
         RequestParams params = new RequestParams();
         service.post("http://jabahan.com/storybook/story/search.php?levelId="+levelId, params);

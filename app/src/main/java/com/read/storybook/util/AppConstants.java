@@ -15,4 +15,7 @@ public class AppConstants {
     public static final String QUESTIONS = "QUESTIONS";
     public static final String EXAM_PAGING = "EXAM_PAGING";
     public static final String EXAM_IS_LAST = "EXAM_IS_LAST";
+
+    public static final String STORY_LESSON = "STORY_LESSON";
+    public static final String STORY_NARRATIVE = "STORY_NARRATIVE";
 }

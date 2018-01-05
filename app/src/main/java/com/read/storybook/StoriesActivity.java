@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.read.storybook.model.Level;
+import com.read.storybook.model.Sound;
 import com.read.storybook.model.Story;
 import com.read.storybook.model.User;
 import com.read.storybook.service.Service;
@@ -99,6 +100,10 @@ public class StoriesActivity extends AppCompatActivity {
             story.setTitle(obj.optString("name"));
             story.setActive(obj.optInt("isActive") == 1);
             story.setCover(obj.optString("cover"));
+            String narrativeUrl =obj.optString("NARRATIVE");
+            if(narrativeUrl != null && !narrativeUrl.trim().equals("")){
+                story.setSound(new Sound(narrativeUrl));
+            }
             stories.add(story);
         }
         return stories;

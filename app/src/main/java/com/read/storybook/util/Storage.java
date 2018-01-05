@@ -24,6 +24,18 @@ public class Storage {
         }
     }
 
+    public static void remove(Context context, User user) {
+
+        try {
+            FileOutputStream fos = context.getApplicationContext().openFileOutput(FILENAME, Context.MODE_PRIVATE);
+            fos.write("".getBytes());
+            fos.close();
+            AppCache.getInstance().setUser(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static String load(Context context) {
         StringBuilder sb = new StringBuilder();
         try {

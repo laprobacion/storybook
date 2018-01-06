@@ -21,6 +21,9 @@ public class Story extends BaseModel{
 	private String title;
 	private String cover;
 	private List<Lesson> lessons;
+
+	public void setLessons(List<Lesson> lessons) {		this.lessons = lessons;	}
+
 	//-- Transient
 	private List<Question> questions;
 	private List<Image> images;

@@ -82,7 +82,11 @@ public class StoryService {
 		service.get("http://jabahan.com/storybook/story/searchimages.php?id="+storyId, params);
 		service.execute();
 	}
-
+	public static void searchLessons(String storyId, Service service){
+		RequestParams params = new RequestParams();
+		service.get("http://jabahan.com/storybook/story/searchLessons.php?id="+storyId, params);
+		service.execute();
+	}
 	public static void delete(Context activity, String storyId, Service service){
 		RequestParams params = new RequestParams();
 		params.put("storyId", storyId);

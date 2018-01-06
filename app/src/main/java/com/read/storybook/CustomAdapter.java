@@ -32,11 +32,12 @@ public class CustomAdapter extends BaseAdapter {
     Context mainActivity;
     int[] imageId;
     private static LayoutInflater inflater = null;
-
-    public CustomAdapter(Context mainActivity, List<Level> levels) {
+    private boolean isLesson;
+    public CustomAdapter(Context mainActivity, List<Level> levels,boolean isLesson) {
         // TODO Auto-generated constructor stub
         this.levels = levels;
         this.mainActivity = mainActivity;
+        this.isLesson = isLesson;
         inflater = (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -78,6 +79,7 @@ public class CustomAdapter extends BaseAdapter {
                 // TODO Auto-generated method stub
                 Intent myIntent = new Intent(mainActivity, StoriesActivity.class);
                 myIntent.putExtra(AppConstants.LEVEL_NAME,levels.get(position));
+                myIntent.putExtra(LevelsActivity.IS_LESSON,String.valueOf(isLesson));
                 mainActivity.startActivity(myIntent);
                 //mainActivity.finish();
             }

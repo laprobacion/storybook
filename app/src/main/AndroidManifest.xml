@@ -40,9 +40,10 @@
             android:name=".ExamActivity"
             android:screenOrientation="landscape" />
         <activity android:name=".LevelsActivity" />
-        <activity android:name=".AddLessonNarrativeActivity" android:screenOrientation="landscape">
-
-        </activity>
+        <activity
+            android:name=".AddLessonNarrativeActivity"
+            android:screenOrientation="landscape"></activity>
+        <activity android:name=".LessonActivity"></activity>
     </application>
 
 </manifest>

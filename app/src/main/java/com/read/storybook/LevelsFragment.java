@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LevelsFragment extends Fragment{
+
     ListView lv;
     View myView;
     @Nullable
@@ -32,9 +33,13 @@ public class LevelsFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         myView = inflater.inflate(R.layout.levels_layout, container, false);
         Intent myIntent = new Intent(getActivity(), LevelsActivity.class);
+        myIntent.putExtra(LevelsActivity.IS_LESSON,String.valueOf(isLesson));
         startActivity(myIntent);
         return myView;
     }
+    private boolean isLesson;
 
-
+    public void setLesson(boolean lesson) {
+        isLesson = lesson;
+    }
 }

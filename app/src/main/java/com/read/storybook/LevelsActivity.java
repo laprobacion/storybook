@@ -21,12 +21,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LevelsActivity extends AppCompatActivity {
+    public static final String IS_LESSON = "IS_LESSON";
+    private boolean isLesson;
     ListView lv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_levels);
-
+        isLesson = Boolean.valueOf(getIntent().getStringExtra(IS_LESSON));
         lv= (ListView)findViewById(R.id.list);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +84,7 @@ public class LevelsActivity extends AppCompatActivity {
     }
     private void addLevels(List<Level> levels){
 
-        lv.setAdapter(new CustomAdapter(LevelsActivity.this, levels));
+        lv.setAdapter(new CustomAdapter(LevelsActivity.this, levels, isLesson));
 
     }
 }

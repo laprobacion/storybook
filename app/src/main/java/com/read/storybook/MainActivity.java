@@ -163,11 +163,15 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         FragmentManager fragmentManager = getFragmentManager();
         if (id == R.id.nav_profile_layout) {
-            fragmentManager.beginTransaction().replace(R.id.content_frame, new ProfileFragment()).commit();
+            LevelsFragment levelsFragment = new LevelsFragment();
+            levelsFragment.setLesson(true);
+            fragmentManager.beginTransaction().replace(R.id.content_frame, levelsFragment).commit();
         } else if (id == R.id.nav_score_layout) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, new ScoreFragment()).commit();
         } else if (id == R.id.nav_stories_layout) {
-            fragmentManager.beginTransaction().replace(R.id.content_frame, new LevelsFragment()).commit();
+            LevelsFragment levelsFragment = new LevelsFragment();
+            levelsFragment.setLesson(false);
+            fragmentManager.beginTransaction().replace(R.id.content_frame, levelsFragment).commit();
         } else if (id == R.id.nav_top_scores_layout) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, new TopScoresFragment()).commit();
         }

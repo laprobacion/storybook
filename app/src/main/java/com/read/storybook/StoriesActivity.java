@@ -31,11 +31,13 @@ import java.util.List;
 public class StoriesActivity extends AppCompatActivity {
     ListView lv;
     Level level;
+    private boolean isLesson;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stories);
         level = (Level)getIntent().getSerializableExtra(AppConstants.LEVEL_NAME);
+        isLesson = Boolean.valueOf(getIntent().getStringExtra(LevelsActivity.IS_LESSON));
         lv= (ListView)findViewById(R.id.list);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -110,6 +112,6 @@ public class StoriesActivity extends AppCompatActivity {
     }
     private void addStories(List<Story> stories){
 
-        lv.setAdapter(new CustomStoryAdapter(this, stories));
+        lv.setAdapter(new CustomStoryAdapter(this, stories, isLesson));
     }
 }

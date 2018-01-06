@@ -16,9 +16,11 @@ public class Player extends AsyncTask<String, Void, Boolean> {
     private MediaPlayer mediaPlayer;
     private boolean initialStage = true;
     private TextView status;
-    public Player(TextView status, Button btn){
+    boolean isPlayingDefault;
+    public Player(TextView status, Button btn, boolean isPlayingDefault){
         this.status = status;
         this.btn = btn;
+        this.isPlayingDefault = isPlayingDefault;
     }
     @Override
     protected Boolean doInBackground(String... strings) {
@@ -57,11 +59,18 @@ public class Player extends AsyncTask<String, Void, Boolean> {
             status.setText("Error loading sound...");
             return;
         }
-        status.setText("Narrative Playing...");
+        if(isPlayingDefault){
+            status.setText("Narrative Playing...");
+            mediaPlayer.start();
+            isPlaying = true;
+        }else{
+            status.setText("Narrative Paused...");
+            mediaPlayer.pause();
+            isPlaying = false;
+        }
         btn.setEnabled(true);
-        mediaPlayer.start();
         initialStage = false;
-        isPlaying = true;
+
     }
 
     @Override
@@ -84,8 +93,11 @@ public class Player extends AsyncTask<String, Void, Boolean> {
         mediaPlayer.start();
     }
     public void stop(){
-        isPlaying = false;
-        status.setText("Narrative Paused.");
-        mediaPlayer.pause();
+        if(mediaPlayer != null){
+            isPlaying = false;
+            status.setText("Narrative Paused.");
+            mediaPlayer.pause();
+        }
+
     }
 }

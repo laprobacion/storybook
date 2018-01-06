@@ -49,4 +49,5 @@
         android:layout_alignLeft="@+id/imageStory"
         android:layout_alignStart="@+id/imageStory"
         android:text="Page" />
+
 </RelativeLayout>

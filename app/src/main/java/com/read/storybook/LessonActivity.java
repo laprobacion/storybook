@@ -34,13 +34,11 @@ public class LessonActivity extends AppCompatActivity {
     public static final String CURRENT_PAGE = "CURRENT_PAGE";
     private List<Fragment> getFragments() {
         List<Fragment> fList = new ArrayList<Fragment>();
-        int ctr = 0;
         String pageLeft = getIntent().getStringExtra(LessonActivity.CURRENT_PAGE);
-        for(Image i : story.getImages()){
-            String page = (ctr + 1) + " of " + story.getImages().size();
-
-            fList.add(PageStoryFragment.newInstance(title.getText().toString(), i.getBitmap(), (ctr + 1) == story.getImages().size(), tempStory, page, false, true,pageLeft));
-            ctr++;
+        story.addImage(new Image("blank"));
+        for(int i=0;i<story.getImages().size();i++){
+            String page = (i + 1) + " of " + story.getImages().size();
+            fList.add(PageStoryFragment.newInstance(title.getText().toString(), story.getImages().get(i).getBitmap(), (i + 1) == story.getImages().size(), tempStory, page, false, true,pageLeft));
         }
         return fList;
     }

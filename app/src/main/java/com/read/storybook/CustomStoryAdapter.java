@@ -82,7 +82,11 @@ public class CustomStoryAdapter extends BaseAdapter {
             holder.img.setImageBitmap(s.getCoverBitmap());
         }
         //holder.img=(ImageView) rowView.findViewById(R.id.imageView1);
-        holder.tv.setText(stories.get(position).getTitle().toString());
+        String title = stories.get(position).getTitle().toString();
+        if(isLesson){
+            title += " lesson";
+        }
+        holder.tv.setText(title);
         //holder.img.setImageResource(imageId[position]);
         rowView.setOnClickListener(new OnClickListener() {
             @Override

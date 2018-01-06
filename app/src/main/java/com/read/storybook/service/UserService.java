@@ -64,16 +64,20 @@ public class UserService {
 		service.execute();
 	}
 
+	public static void updateAdmin(final User user, Service service){
+		RequestParams params = new RequestParams();
+		params.put("id", user.getId());
+		params.put("isAdmin", user.isAdmin());
+		service.post("http://jabahan.com/storybook/user/updateAdmin.php", params);
+		service.execute();
+	}
+
 	public static User getUserByUserId(String id){
 		return new UserDao().getUserById(id);
 	}
 
 	
-	public static void update(User user){
-		if(new UserDao().update(user) == null){
-			throw new RuntimeException("User not found!");
-		}
-	}
+
 	
 	public static void updatePassword(User user){
 		if(user.getPassword() != null && !user.getPassword().trim().equals("")){

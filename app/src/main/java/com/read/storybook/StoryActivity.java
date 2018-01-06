@@ -57,12 +57,13 @@ public class StoryActivity extends FragmentActivity{
     boolean isLesson;
     Integer pageToShow;
     String pageToLoad;
+    FloatingActionButton fab;
     private List<Fragment> getFragments() {
         List<Fragment> fList = new ArrayList<Fragment>();
         int ctr = 0;
         if(!isLesson && pageToLoad == null) {
             if (pageToShow == null && tempStory.getLessons() != null && tempStory.getLessons().size() > 0) {
-                pageToShow = generateRandomNumbers(tempStory.getLessons().size());
+                pageToShow = generateRandomNumbers(story.getImages().size());
             }
         }
         tempStory.setSound(story.getSound());
@@ -90,10 +91,21 @@ public class StoryActivity extends FragmentActivity{
         setContentView(R.layout.activity_story);
         isLesson = Boolean.valueOf(getIntent().getStringExtra(LevelsActivity.IS_LESSON));
         story = (Story)getIntent().getSerializableExtra(AppConstants.STORY_OBJ);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(StoryActivity.this, AddLessonNarrativeActivity.class);
+                myIntent.putExtra(AppConstants.STORY_ID,story.getId());
+                myIntent.putExtra(AppConstants.STORY_LESSON,story.getId());
+                startActivity(myIntent);
+            }
+        });
         pageToLoad = getIntent().getStringExtra(LessonActivity.CURRENT_PAGE);
         if(!isLesson){
             tempStory.setTitle(story.getTitle());
             imageLoader = new ImageLoader(this, story, tempStory, pageToLoad == null);
+            fab.setVisibility(View.INVISIBLE);
         }
         title = (TextView) findViewById(R.id.mainStoryTitle);
         title.setText(story.getTitle());
@@ -156,6 +168,7 @@ public class StoryActivity extends FragmentActivity{
         if(isLesson){
             if(arr == null) {
                 title.setText("No available lesson.");
+                fab.setVisibility(View.VISIBLE);
             }else{
                 title.setText("Lesson for " + title.getText().toString());
             }

@@ -1,5 +1,7 @@
 package com.read.storybook;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.FragmentManager;
@@ -149,6 +151,10 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            User user = AppCache.getInstance().getUser();
+            if(user.isAdmin()){
+                startActivity(new Intent(this, AdminActivity.class));
+            }
             return true;
         }
 
@@ -174,7 +180,25 @@ public class MainActivity extends AppCompatActivity
             fragmentManager.beginTransaction().replace(R.id.content_frame, levelsFragment).commit();
         } else if (id == R.id.nav_top_scores_layout) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, new TopScoresFragment()).commit();
+        } else if (id == R.id.nav_log_out_layout) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Logout")
+                    .setMessage("Are you sure you want to logout?")
+                    .setNegativeButton(android.R.string.cancel, null) // dismisses by default
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override public void onClick(DialogInterface dialog, int which) {
+                            Storage.remove(MainActivity.this,new User());
+                            startActivity(new Intent(MainActivity.this,MainActivity.class));
+                            finish();
+                        }
+                    })
+                    .create()
+                    .show();
+
+        }else if (id == R.id.nav_updates) {
+            startActivity(new Intent(MainActivity.this,UpdatesActivity.class));
         }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

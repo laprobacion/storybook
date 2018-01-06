@@ -43,13 +43,16 @@ public class StoriesActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent myIntent = new Intent(StoriesActivity.this, AddStoryActivity.class);
-                myIntent.putExtra(AppConstants.LEVEL_ID,level.getId());
-                startActivity(myIntent);
+                if(!isLesson){
+                    Intent myIntent = new Intent(StoriesActivity.this, AddStoryActivity.class);
+                    myIntent.putExtra(AppConstants.LEVEL_ID,level.getId());
+                    startActivity(myIntent);
+                }
+
             }
         });
         User user = AppCache.getInstance().getUser();
-        if(!user.isAdmin()){
+        if(!user.isAdmin() && !isLesson){
             fab.setVisibility(View.INVISIBLE);
         }
     }

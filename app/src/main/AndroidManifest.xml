@@ -42,8 +42,10 @@
         <activity android:name=".LevelsActivity" />
         <activity
             android:name=".AddLessonNarrativeActivity"
-            android:screenOrientation="landscape"></activity>
-        <activity android:name=".LessonActivity"></activity>
+            android:screenOrientation="landscape" />
+        <activity android:name=".LessonActivity" />
+        <activity android:name=".AdminActivity" />
+        <activity android:name=".UpdatesActivity"></activity>
     </application>
 
 </manifest>

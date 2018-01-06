@@ -3,8 +3,12 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_top_scores_layout"
+            android:icon="@drawable/icon_topscore"
+            android:title="Top Scores" />
+        <item
             android:id="@+id/nav_profile_layout"
-            android:icon="@drawable/icon_profile"
+            android:icon="@drawable/lesson"
             android:title="Lessons" />
         <item
             android:id="@+id/nav_score_layout"
@@ -15,9 +19,17 @@
             android:icon="@drawable/icon_book"
             android:title="Stories" />
         <item
-            android:id="@+id/nav_top_scores_layout"
-            android:icon="@drawable/icon_topscore"
-            android:title="Top Scores" />
+            android:id="@+id/nav_log_out_layout"
+            android:icon="@drawable/logout"
+            android:title="Logout" />
+        <item
+            android:id="@+id/nav_updates"
+            android:icon="@drawable/updates"
+            android:title="Updates" />
+        <item
+            android:id="@+id/nav_about_us"
+            android:icon="@drawable/about_us"
+            android:title="About us" />
     </group>
 
 </menu>

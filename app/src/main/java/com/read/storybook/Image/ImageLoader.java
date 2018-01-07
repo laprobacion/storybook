@@ -2,6 +2,7 @@ package com.read.storybook.Image;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -113,10 +114,14 @@ public class ImageLoader {
     }
 
     public void playAudio(final Story story){
-        if(story.getSound() != null){
-            mediaPlayer.execute(story.getSound().getUrl());
-            playAudio.setVisibility(View.VISIBLE);
-            status.setVisibility(View.VISIBLE);
+        if(story.getSound() != null && mediaPlayer.getStatus() == AsyncTask.Status.PENDING){
+            try {
+                mediaPlayer.execute(story.getSound().getUrl());
+                playAudio.setVisibility(View.VISIBLE);
+                status.setVisibility(View.VISIBLE);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
     }
 

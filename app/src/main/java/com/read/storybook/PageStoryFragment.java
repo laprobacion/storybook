@@ -19,7 +19,9 @@ import android.widget.TextView;
 
 import com.read.storybook.model.Question;
 import com.read.storybook.model.Story;
+import com.read.storybook.util.AppCache;
 import com.read.storybook.util.AppConstants;
+import com.read.storybook.util.Util;
 
 import java.util.List;
 import java.util.Random;
@@ -87,6 +89,11 @@ public class PageStoryFragment extends Fragment {
         TextView pageNo = v.findViewById(R.id.paging);
 
         pageNo.setText(getArguments().getString(PAGING));
+        if(getArguments().getString(PAGING).split(" of ")[0].equals("1")){
+            if(!AppCache.getInstance().isPageOneDestroyed()){
+                Util.createFadingWindow(parent,"Swipe left or right to turn page.",120,1400,200,350);
+            }
+        }
         if(getArguments().getBoolean(PAGE_TO_SHOW)){
             createWindow(40,parent, "Lesson Time!",story,pageNo.getText().toString(), false,null);
             parent.invalidate();
@@ -99,81 +106,45 @@ public class PageStoryFragment extends Fragment {
     }
 
     private void createWindow(int textSize, final RelativeLayout parent, String str, final Story s, final String page, final boolean isLesson, final String pageLeft){
-        final RelativeLayout window = createRelativeLayout(parent,isLesson);
-        TextView message = createTextView(str,textSize,20,0,window,RelativeLayout.LayoutParams.MATCH_PARENT);
+        final RelativeLayout window = Util.createWindowRelativeLayout(parent,isLesson);
+        TextView message = Util.createTextView(str,textSize,20,0,window,RelativeLayout.LayoutParams.MATCH_PARENT);
         message.setTextColor(Color.argb(200, 255, 255, 255));
         message.setAllCaps(false);
         String txtButton = "OK";
         TextView button = null;
         if(isLesson){
-            TextView subMessage = createTextView("lesson!",textSize,100,0,window,RelativeLayout.LayoutParams.MATCH_PARENT);
+            TextView subMessage = Util.createTextView("lesson!",textSize,100,0,window,RelativeLayout.LayoutParams.MATCH_PARENT);
             subMessage.setTextColor(Color.argb(200, 255, 255, 255));
             subMessage.setAllCaps(false);
             txtButton = " Return to story ";
-            button = createTextView(txtButton,20,215,220,window,RelativeLayout.LayoutParams.WRAP_CONTENT);
+            button = Util.createTextView(txtButton,20,215,220,window,RelativeLayout.LayoutParams.WRAP_CONTENT);
         }else{
-            button = createTextView(txtButton,30,170,320,window,RelativeLayout.LayoutParams.WRAP_CONTENT);
+            button = Util.createTextView(txtButton,30,170,320,window,RelativeLayout.LayoutParams.WRAP_CONTENT);
             button.getLayoutParams().width = 150;
         }
-
         button.setTextColor(Color.argb(180, 255, 255, 255));
         button.setBackgroundColor(Color.argb(200,108,186,249));
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent myIntent = null;
+                s.setLessons(null);
                 if(!isLesson){
-                    Intent myIntent = new Intent(parent.getContext(), LessonActivity.class);
-                    s.setLessons(null);
-                    myIntent.putExtra(AppConstants.STORY_OBJ,s);
+                    myIntent = new Intent(parent.getContext(), LessonActivity.class);
                     myIntent.putExtra(LessonActivity.CURRENT_PAGE,page.split(" of ")[0]);
-                    parent.getContext().startActivity(myIntent);
-                    getActivity().finish();
                 }else{
-                    Intent myIntent = new Intent(parent.getContext(), StoryActivity.class);
-                    s.setLessons(null);
-                    myIntent.putExtra(AppConstants.STORY_OBJ,s);
+                    myIntent = new Intent(parent.getContext(), StoryActivity.class);
                     myIntent.putExtra(LevelsActivity.IS_LESSON,"false");
                     myIntent.putExtra(LessonActivity.CURRENT_PAGE,pageLeft);
-                    parent.getContext().startActivity(myIntent);
-                    getActivity().finish();
                 }
+                myIntent.putExtra(AppConstants.STORY_OBJ,s);
+                parent.getContext().startActivity(myIntent);
+                getActivity().finish();
 
             }
         });
     }
 
-    private RelativeLayout createRelativeLayout(RelativeLayout parent, boolean isLesson){
-        RelativeLayout rl = new RelativeLayout(parent.getContext());
-        rl.setBackgroundColor(Color.argb(130, 0, 0, 0));
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
-        if(isLesson){
-            lp.height = 320;
-        }else{
-            lp.height = 300;
-        }
 
-        lp.width = 800;
-        lp.setMargins(500,300,0,0);
-
-        rl.setLayoutParams(lp);
-        parent.addView(rl);
-        return rl;
-    }
-    public static TextView createTextView(String str, int textSize, int top, int left, RelativeLayout layout,int w){
-        TextView tv = new TextView(layout.getContext());
-        tv.setTextSize(textSize);
-        tv.setText(str);
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                w,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
-        lp.topMargin = top;
-        lp.leftMargin = left;
-        tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        tv.setLayoutParams(lp);
-        layout.addView(tv);
-        return tv;
-    }
 
 }

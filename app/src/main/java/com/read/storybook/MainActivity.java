@@ -94,7 +94,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         Button registerBtn = (Button)findViewById(R.id.registerBtn);
         registerBtn.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){

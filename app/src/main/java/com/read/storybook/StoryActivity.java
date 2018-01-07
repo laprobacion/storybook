@@ -89,6 +89,7 @@ public class StoryActivity extends FragmentActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_story);
+
         isLesson = Boolean.valueOf(getIntent().getStringExtra(LevelsActivity.IS_LESSON));
         story = (Story)getIntent().getSerializableExtra(AppConstants.STORY_OBJ);
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -106,10 +107,12 @@ public class StoryActivity extends FragmentActivity{
             tempStory.setTitle(story.getTitle());
             imageLoader = new ImageLoader(this, story, tempStory, pageToLoad == null);
             fab.setVisibility(View.INVISIBLE);
+
         }
         title = (TextView) findViewById(R.id.mainStoryTitle);
         title.setText(story.getTitle());
         searchImages(story);
+        AppCache.getInstance().setPageOneDestroyed(false);
     }
 
     private void searchImages(final Story story){
@@ -155,7 +158,7 @@ public class StoryActivity extends FragmentActivity{
                         pager.setCurrentItem(Integer.valueOf(pageToLoad) - 1);
                     }
                     if(imageLoader != null){
-                        imageLoader.playAudio(story);
+                       imageLoader.playAudio(story);
                     }
 
                 }catch (Exception e){e.printStackTrace();}

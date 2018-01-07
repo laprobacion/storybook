@@ -14,6 +14,7 @@ import com.read.storybook.model.Story;
 import com.read.storybook.service.Service;
 import com.read.storybook.service.ServiceResponse;
 import com.read.storybook.service.StoryService;
+import com.read.storybook.util.AppCache;
 import com.read.storybook.util.AppConstants;
 
 import org.json.JSONArray;
@@ -53,6 +54,7 @@ public class LessonActivity extends AppCompatActivity {
         title = (TextView) findViewById(R.id.mainStoryTitle);
         title.setText(story.getTitle());
         searchImages(story);
+        AppCache.getInstance().setPageOneDestroyed(false);
     }
 
     private void searchImages(final Story story){

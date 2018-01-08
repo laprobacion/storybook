@@ -45,7 +45,6 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("MyAudioStreamingApp", e.getMessage());
             prepared = false;
         }
 

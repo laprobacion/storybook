@@ -61,7 +61,7 @@ public class ImageLoader {
     }
 
     public void setBtnLessonVisible(int v){
-        btnLesson.setVisibility(v);
+        btnLesson.setVisibility(View.INVISIBLE);
     }
     private List<Question> createQuestions(JSONObject resp){
         List<Question> questions = new ArrayList<Question>();

@@ -175,14 +175,6 @@ public class StoryActivity extends FragmentActivity{
             }else{
                 title.setText("Lesson for " + title.getText().toString());
             }
-        }else{
-            if(!executeBitmap) {
-                if (arr == null) {
-                    imageLoader.setBtnLessonVisible(View.VISIBLE);
-                } else {
-                    imageLoader.setBtnLessonVisible(View.INVISIBLE);
-                }
-            }
         }
         for( int i=0; i< arr.length(); i++){
             JSONObject obj = arr.optJSONObject(i);

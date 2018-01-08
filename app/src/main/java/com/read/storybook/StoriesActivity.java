@@ -52,7 +52,7 @@ public class StoriesActivity extends AppCompatActivity {
             }
         });
         User user = AppCache.getInstance().getUser();
-        if(!user.isAdmin() && !isLesson){
+        if(!user.isAdmin() || isLesson){
             fab.setVisibility(View.INVISIBLE);
         }
     }

@@ -66,7 +66,6 @@ public class StoryActivity extends FragmentActivity{
                 pageToShow = generateRandomNumbers(story.getImages().size());
             }
         }
-        tempStory.setSound(story.getSound());
         for(Image i : story.getImages()){
             String page = (ctr + 1) + " of " + story.getImages().size();
             boolean hasLesson = pageToShow != null ? pageToShow == (ctr + 1): false;
@@ -107,6 +106,11 @@ public class StoryActivity extends FragmentActivity{
             tempStory.setTitle(story.getTitle());
             imageLoader = new ImageLoader(this, story, tempStory, pageToLoad == null);
             fab.setVisibility(View.INVISIBLE);
+            if(story.getSoundList() != null && story.getSoundList().size() > 0){
+                imageLoader.setBtnNarrative(View.INVISIBLE);
+            }else{
+                imageLoader.setBtnNarrative(View.VISIBLE);
+            }
 
         }
         title = (TextView) findViewById(R.id.mainStoryTitle);
@@ -157,9 +161,6 @@ public class StoryActivity extends FragmentActivity{
                     if(pageToLoad != null){
                         pager.setCurrentItem(Integer.valueOf(pageToLoad) - 1);
                     }
-                    if(imageLoader != null){
-                       imageLoader.playAudio(story);
-                    }
 
                 }catch (Exception e){e.printStackTrace();}
             }
@@ -197,9 +198,6 @@ public class StoryActivity extends FragmentActivity{
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if(imageLoader != null){
-            imageLoader.getMediaPlayer().stop();
-        }
     }
 
 }

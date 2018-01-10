@@ -9,6 +9,16 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class Sound extends BaseModel{
+    private String priority;
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+
     private String ext;
     private Uri uri;
     private String url;

@@ -31,7 +31,6 @@ import java.util.List;
 public class ImageLoader {
     Player mediaPlayer;
     Button createExam,btnNarrative,btnLesson;
-    Button playAudio;
     TextView status;
     StoryActivity activity;
     Story story;
@@ -48,12 +47,7 @@ public class ImageLoader {
         status = (TextView) activity.findViewById(R.id.status);
         status.setTextSize(10);
         createExam = (Button) activity.findViewById(R.id.createExam);
-        playAudio = (Button) activity.findViewById(R.id.playAudio);
-        playAudio.setEnabled(false);
-        mediaPlayer = new Player(status,playAudio,isPlayingDefault);
-
         btnNarrative = (Button) activity.findViewById(R.id.btnNarrative);
-
         btnLesson = (Button) activity.findViewById(R.id.btnLesson);
 
         //remove this
@@ -103,9 +97,6 @@ public class ImageLoader {
                     if(user.isAdmin() && tempStory != null && tempStory.getQuestions() == null){
                         createExam.setVisibility(View.VISIBLE);
                     }
-                    if(user.isAdmin() && story.getSound() == null){
-                        btnNarrative.setVisibility(View.VISIBLE);
-                    }
                     activity.getBitmaps(story);
                 }catch (Exception e){e.printStackTrace();}
             }
@@ -113,33 +104,11 @@ public class ImageLoader {
         QuestionService.getQuestions(storyId, service);
     }
 
-    public void playAudio(final Story story){
-        if(story.getSound() != null && mediaPlayer.getStatus() == AsyncTask.Status.PENDING){
-            try {
-                mediaPlayer.execute(story.getSound().getUrl());
-                playAudio.setVisibility(View.VISIBLE);
-                status.setVisibility(View.VISIBLE);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-    }
+
 
 
     private void setOnClickListeners(){
-        playAudio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mediaPlayer.isPlaying()){
-                    playAudio.setBackground(activity.getDrawable(R.drawable.mic_unmute));
-                    mediaPlayer.stop();
-                }else{
-                    playAudio.setBackground(activity.getDrawable(R.drawable.mic_mute));
-                    mediaPlayer.play();
-                }
-                playAudio.invalidate();
-            }
-        });
+
         btnNarrative.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -174,5 +143,9 @@ public class ImageLoader {
                 activity.finish();
             }
         });
+    }
+
+    public void setBtnNarrative(int v){
+        btnNarrative.setVisibility(v);
     }
 }

@@ -7,6 +7,7 @@ import com.loopj.android.http.RequestParams;
 import com.read.storybook.dao.StoryDao;
 import com.read.storybook.dao.UserStoryDao;
 import com.read.storybook.model.Image;
+import com.read.storybook.model.Sound;
 import com.read.storybook.model.Story;
 import com.read.storybook.model.User;
 import com.read.storybook.util.Encryptor;
@@ -64,11 +65,18 @@ public class StoryService {
 	}
 
 	public static void addNarrative(final Story story, Service service){
-		//service.post("http://jabahan.com/storybook/story/create.php", params);
 		HashMap<String,String> data = new HashMap<String,String> ();
 		data.put("id", story.getId());
-		data.put("narrative", story.getSound().getEncoded());
-		data.put("ext", story.getSound().getExt());
+		data.put("imageCount", String.valueOf(story.getSoundList().size()));
+		int i=0;
+		for (Sound sound : story.getSoundList()){
+			int id = i+1;
+			data.put("imageid"+id, Util.generateId());
+			data.put("priority"+id, sound.getPriority());
+			data.put("image"+id, sound.getEncoded());
+			data.put("ext"+id, sound.getExt());
+			i++;
+		}
 		service.post("http://jabahan.com/storybook/story/addNarrative.php", data);
 		service.execute();
 	}
@@ -85,6 +93,11 @@ public class StoryService {
 	public static void searchLessons(String storyId, Service service){
 		RequestParams params = new RequestParams();
 		service.get("http://jabahan.com/storybook/story/searchLessons.php?id="+storyId, params);
+		service.execute();
+	}
+	public static void searchNarratives(String storyId, Service service){
+		RequestParams params = new RequestParams();
+		service.get("http://jabahan.com/storybook/story/searchNarratives.php?id="+storyId, params);
 		service.execute();
 	}
 	public static void delete(Context activity, String storyId, Service service){

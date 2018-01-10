@@ -14,10 +14,7 @@ import java.util.Map;
 public class Story extends BaseModel{
 	
 	private Sound sound;
-
-	public Sound getSound() {		return sound;	}
-	public void setSound(Sound sound) {		this.sound = sound;	}
-
+	private List<Sound> soundList;
 	private String title;
 	private String cover;
 	private List<Lesson> lessons;
@@ -45,10 +42,16 @@ public class Story extends BaseModel{
 	public List<Lesson> getLessons(){
 		return this.lessons;
 	}
+
+	public List<Sound> getSoundList() {		return soundList;	}
+	public void addSound(Sound sound){
+		this.soundList.add(sound);
+	}
 	public Story(){
 		questions = new ArrayList<Question>();
 		images = new ArrayList<Image>();
 		lessons = new ArrayList<Lesson>();
+		soundList = new ArrayList<Sound>();
 	}
 
 	public String getTitle() {

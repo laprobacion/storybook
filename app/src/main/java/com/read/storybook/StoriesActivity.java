@@ -2,6 +2,7 @@ package com.read.storybook;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -82,6 +83,16 @@ public class StoriesActivity extends AppCompatActivity {
         StoryService.search(level.getId(),service);
     }
 
+
+    private Story findStory(String id,List<Story> stories){
+        for(Story s: stories){
+            if(s.getId().equals(id)){
+                return s;
+            }
+        }
+        return null;
+    }
+
     private void setStoryIcon(final List<Story> stories){
         Service service = new Service("Searching story...", StoriesActivity.this, new ServiceResponse() {
             @Override
@@ -105,9 +116,18 @@ public class StoriesActivity extends AppCompatActivity {
             story.setTitle(obj.optString("name"));
             story.setActive(obj.optInt("isActive") == 1);
             story.setCover(obj.optString("cover"));
-            String narrativeUrl =obj.optString("NARRATIVE");
-            if(narrativeUrl != null && !narrativeUrl.trim().equals("")){
-                story.setSound(new Sound(narrativeUrl));
+            JSONObject narrObj = obj.optJSONObject("narratives");
+            if(narrObj != null){
+                JSONArray narrArray = narrObj.optJSONArray("narratives");
+                if(narrArray != null && narrArray.length() > 0){
+                    for(int j=0; j< narrArray.length(); j++){
+                        JSONObject narr = narrArray.optJSONObject(j);
+                        Sound sound = new Sound(narr.optString("narrative"));
+                        sound.setPriority(narr.optString("priority"));
+                        story.addSound(sound);
+                    }
+                }
+
             }
             stories.add(story);
         }

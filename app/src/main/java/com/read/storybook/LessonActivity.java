@@ -50,7 +50,6 @@ public class LessonActivity extends AppCompatActivity {
         story = (Story)getIntent().getSerializableExtra(AppConstants.STORY_OBJ);
         tempStory.setTitle(story.getTitle());
         tempStory.setId(story.getId());
-        tempStory.setSound(story.getSound());
         title = (TextView) findViewById(R.id.mainStoryTitle);
         title.setText(story.getTitle());
         searchImages(story);

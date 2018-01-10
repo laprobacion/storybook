@@ -121,15 +121,15 @@ public class AddStoryActivity extends AppCompatActivity {
         Set<String> prs = new HashSet<String>();
         for(EditText et: arrEditTxt){
             if(et.getText().toString().trim().equals("")){
-               return "Priority cannot be empty";
+               return "Page cannot be empty";
             }
             try{
                 Integer.parseInt(et.getText().toString().trim());
             }catch (NumberFormatException e){
-                return "Priority must be a number";
+                return "Page must be a number";
             }
             if (!prs.add(et.getText().toString().trim())) {
-                return "Duplicate Priority";
+                return "Duplicate Page";
             }
         }
         return null;

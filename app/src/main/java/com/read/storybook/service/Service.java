@@ -54,6 +54,9 @@ public class Service extends AsyncTask<Void, Void, Void> {
         this.sr = serviceResponse;
         this.loadingTitle = loadingTitle;
     }
+
+    public void setLoadingTitle(String loadingTitle) {        this.loadingTitle = loadingTitle;    }
+
     public void post(String url, HashMap<String,String> data){
         this.url = url;
         this.data = data;

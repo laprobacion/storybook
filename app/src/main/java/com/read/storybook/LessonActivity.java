@@ -48,6 +48,7 @@ public class LessonActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lesson);
         story = (Story)getIntent().getSerializableExtra(AppConstants.STORY_OBJ);
+        tempStory.setSoundList(story.getSoundList());
         tempStory.setTitle(story.getTitle());
         tempStory.setId(story.getId());
         title = (TextView) findViewById(R.id.mainStoryTitle);

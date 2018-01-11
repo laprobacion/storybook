@@ -29,23 +29,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ImageLoader {
-    Player mediaPlayer;
     Button createExam,btnNarrative,btnLesson;
-    TextView status;
     StoryActivity activity;
     Story story;
     Story tempStory;
 
-    public Player getMediaPlayer() {
-        return mediaPlayer;
-    }
 
     public ImageLoader(StoryActivity activity, Story story, Story tempStory, boolean isPlayingDefault){
         this.activity = activity;
         this.story = story;
         this.tempStory = tempStory;
-        status = (TextView) activity.findViewById(R.id.status);
-        status.setTextSize(10);
         createExam = (Button) activity.findViewById(R.id.createExam);
         btnNarrative = (Button) activity.findViewById(R.id.btnNarrative);
         btnLesson = (Button) activity.findViewById(R.id.btnLesson);
@@ -128,7 +121,6 @@ public class ImageLoader {
                 myIntent.putExtra(AppConstants.STORY_ID,story.getId());
                 myIntent.putExtra(AppConstants.STORY_LESSON,story.getId());
                 activity.startActivity(myIntent);
-                mediaPlayer.stop();
                 activity.finish();
             }
         });
@@ -139,7 +131,6 @@ public class ImageLoader {
                 Intent myIntent = new Intent(activity, AddQuestionActivity.class);
                 myIntent.putExtra(AppConstants.STORY_ID,story.getId());
                 activity.startActivity(myIntent);
-                mediaPlayer.stop();
                 activity.finish();
             }
         });

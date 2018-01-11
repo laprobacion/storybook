@@ -13,7 +13,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="29dp"
         android:layout_marginStart="29dp"
-        android:layout_marginTop="27dp"
+        android:layout_marginTop="30dp"
         android:text="TextView" />
 
     <ImageView
@@ -49,5 +49,30 @@
         android:layout_alignLeft="@+id/imageStory"
         android:layout_alignStart="@+id/imageStory"
         android:text="Page" />
+
+    <Button
+        android:id="@+id/playAudio"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+
+        android:layout_marginRight="475dp"
+        android:background="@drawable/mic_mute"
+        android:text=""
+        android:textAllCaps="false"
+        android:visibility="visible"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/storyTitle" />
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:visibility="visible"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="..."
+        android:layout_marginTop="12dp"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/paging" />
 
 </RelativeLayout>

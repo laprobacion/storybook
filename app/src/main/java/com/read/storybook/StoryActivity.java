@@ -1,49 +1,26 @@
 package com.read.storybook;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.net.Uri;
-import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.read.storybook.Image.ImageLoader;
-import com.read.storybook.model.Choice;
 import com.read.storybook.model.Image;
 import com.read.storybook.model.Lesson;
-import com.read.storybook.model.Question;
 import com.read.storybook.model.Story;
-import com.read.storybook.model.User;
-import com.read.storybook.service.QuestionService;
 import com.read.storybook.service.Service;
 import com.read.storybook.service.ServiceResponse;
 import com.read.storybook.service.StoryService;
 import com.read.storybook.util.AppCache;
 import com.read.storybook.util.AppConstants;
-import com.read.storybook.util.Player;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -91,6 +68,7 @@ public class StoryActivity extends FragmentActivity{
 
         isLesson = Boolean.valueOf(getIntent().getStringExtra(LevelsActivity.IS_LESSON));
         story = (Story)getIntent().getSerializableExtra(AppConstants.STORY_OBJ);
+        tempStory.setSoundList(story.getSoundList());
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,6 +139,13 @@ public class StoryActivity extends FragmentActivity{
                     if(pageToLoad != null){
                         pager.setCurrentItem(Integer.valueOf(pageToLoad) - 1);
                     }
+                    pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                        public void onPageScrollStateChanged(int state) {}
+                        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+
+                        public void onPageSelected(int position) {
+                        }
+                    });
 
                 }catch (Exception e){e.printStackTrace();}
             }
@@ -198,6 +183,7 @@ public class StoryActivity extends FragmentActivity{
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+
     }
 
 }

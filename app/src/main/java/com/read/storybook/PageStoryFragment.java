@@ -1,14 +1,13 @@
 package com.read.storybook;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.net.Uri;
+
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +16,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.read.storybook.model.Question;
+import com.read.storybook.model.Sound;
 import com.read.storybook.model.Story;
 import com.read.storybook.util.AppCache;
 import com.read.storybook.util.AppConstants;
+import com.read.storybook.util.Player;
 import com.read.storybook.util.Util;
 
-import java.util.List;
-import java.util.Random;
 
 
 public class PageStoryFragment extends Fragment {
@@ -37,8 +35,17 @@ public class PageStoryFragment extends Fragment {
     public static final String PAGE_TO_SHOW = "PAGE_TO_SHOW";
     public static final String PAGE_LEFT = "PAGE_LEFT";
     public static final String IS_LESSON = "IS_LESSON";
+    Player audio;
+    Button audioButton;
+    TextView status;
+    Sound soundToLoad = null;
+    String currentPage;
+    Story story = null;
+    boolean fragmentResume,fragmentVisible,fragmentOnCreated,isSoundExecuted;
+    public PageStoryFragment() {
 
-    public PageStoryFragment() {    }
+
+    }
 
     public static final PageStoryFragment newInstance(String message, Bitmap bitmap, boolean isLast, Story story, String paging, boolean hasLesson, boolean isLesson, String pageLeft)
     {
@@ -62,12 +69,16 @@ public class PageStoryFragment extends Fragment {
         String message = getArguments().getString(PAGE_TITLE);
         Bitmap bitmap = getArguments().getParcelable(IMAGE);
         boolean isLast = getArguments().getBoolean(IS_LAST);
-        final Story story = (Story)getArguments().getSerializable(STORY);
         String pageLeft = getArguments().getString(PAGE_LEFT);
         View v = inflater.inflate(R.layout.fragment_page_story, container, false);
         TextView messageTextView = (TextView)v.findViewById(R.id.storyTitle);
         messageTextView.setText("");
         ImageView iv = (ImageView) v.findViewById(R.id.imageStory);
+        story = (Story)getArguments().getSerializable(STORY);
+        currentPage = getArguments().getString(PAGING).split(" of ")[0];
+        status = (TextView) v.findViewById(R.id.status);
+        audioButton = (Button) v.findViewById(R.id.playAudio);
+
         RelativeLayout parent = (RelativeLayout)v.findViewById(R.id.myfragment_layout);
         iv.setImageBitmap(bitmap);
         iv.setMinimumWidth(3000);
@@ -89,7 +100,8 @@ public class PageStoryFragment extends Fragment {
         TextView pageNo = v.findViewById(R.id.paging);
 
         pageNo.setText(getArguments().getString(PAGING));
-        if(getArguments().getString(PAGING).split(" of ")[0].equals("1")){
+        initAudio();
+        if(currentPage.equals("1")){
             if(!AppCache.getInstance().isPageOneDestroyed()){
                 Util.createFadingWindow(parent,"Swipe left or right to turn page.",120,1400,200,350);
             }
@@ -98,13 +110,77 @@ public class PageStoryFragment extends Fragment {
             createWindow(40,parent, "Lesson Time!",story,pageNo.getText().toString(), false,null);
             parent.invalidate();
         }
+
         if(getArguments().getBoolean(IS_LESSON) && isLast){
             createWindow(30,parent, "You have finished the ",story,pageNo.getText().toString(), true,pageLeft);
             parent.invalidate();
         }
         return v;
     }
+    @Override
+    public void setUserVisibleHint(boolean visible){
+        super.setUserVisibleHint(visible);
+        if (visible && isResumed()){   // only at fragment screen is resumed
+            fragmentResume=true;
+            fragmentVisible=false;
+            fragmentOnCreated=true;
+            playNarrative();
+        }else  if (visible){        // only at fragment onCreated
+            fragmentResume=false;
+            fragmentVisible=true;
+            fragmentOnCreated=true;
+        }
+        else if(!visible && fragmentOnCreated){// only when you go out of fragment screen
+            fragmentVisible=false;
+            fragmentResume=false;
+            stopAudio();
+        }else{
+            stopAudio();
+        }
+    }
+    private void initAudio(){
+        if(getArguments().getBoolean(IS_LESSON)){
+            audioButton.setVisibility(View.INVISIBLE);
+            status.setVisibility(View.INVISIBLE);
+        }else{
+            if(story.getSoundList() != null){
+                for(Sound sound : story.getSoundList()){
+                    if(sound.getPriority().equals(currentPage)){
+                        soundToLoad = sound;
+                        audio = new Player(status,audioButton,true);
+                        addAudioButtonListener();
+                        break;
+                    }
+                }
+            }
+            if(soundToLoad != null){
+                audioButton.setVisibility(View.VISIBLE);
+                status.setVisibility(View.VISIBLE);
+                if (!fragmentResume && fragmentVisible){   //only when first time fragment is created
+                    playNarrative();
+                }
 
+            }else{
+                audioButton.setVisibility(View.INVISIBLE);
+                status.setVisibility(View.INVISIBLE);
+            }
+        }
+    }
+    private void addAudioButtonListener(){
+        audioButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(audio.isPlaying()){
+                    audioButton.setBackground(getActivity().getDrawable(R.drawable.mic_unmute));
+                    audio.stop();
+                }else{
+                    audioButton.setBackground(getActivity().getDrawable(R.drawable.mic_mute));
+                    audio.play();
+                }
+                audioButton.invalidate();
+            }
+        });
+    }
     private void createWindow(int textSize, final RelativeLayout parent, String str, final Story s, final String page, final boolean isLesson, final String pageLeft){
         final RelativeLayout window = Util.createWindowRelativeLayout(parent,isLesson);
         TextView message = Util.createTextView(str,textSize,20,0,window,RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -145,6 +221,39 @@ public class PageStoryFragment extends Fragment {
         });
     }
 
+
+    public void playNarrative(){
+        if(soundToLoad != null ){
+            if(audio.getStatus() == AsyncTask.Status.PENDING ){
+                audio.execute(soundToLoad.getUrl());
+            }else{
+                audio.play();
+            }
+
+        }
+    }
+
+    public void stopAudio(){
+        if(audioButton != null && soundToLoad != null){
+            if(audio.isPlaying()){
+                audioButton.setBackground(getActivity().getDrawable(R.drawable.mic_unmute));
+                audio.stop();
+            }
+        }
+    }
+
+    public void destroyAudio(){
+        if(audioButton != null && audio != null){
+            audio.cancel(true);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        destroyAudio();
+        stopAudio();
+    }
 
 
 }

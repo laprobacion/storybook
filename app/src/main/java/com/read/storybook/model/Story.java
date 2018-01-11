@@ -19,6 +19,10 @@ public class Story extends BaseModel{
 	private String cover;
 	private List<Lesson> lessons;
 
+	public void setSoundList(List<Sound> soundList) {
+		this.soundList = soundList;
+	}
+
 	public void setLessons(List<Lesson> lessons) {		this.lessons = lessons;	}
 
 	//-- Transient

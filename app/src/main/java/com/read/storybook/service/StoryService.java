@@ -64,10 +64,13 @@ public class StoryService {
 		service.execute();
 	}
 
-	public static void addNarrative(final Story story, Service service){
+	public static void addNarrative(final Story story, Service service, boolean isStory){
 		HashMap<String,String> data = new HashMap<String,String> ();
 		data.put("id", story.getId());
 		data.put("imageCount", String.valueOf(story.getSoundList().size()));
+		String table = isStory ? "STORYNARRATIVE" : "LESSONNARRATIVE";
+		data.put("table", table);
+
 		int i=0;
 		for (Sound sound : story.getSoundList()){
 			int id = i+1;
@@ -80,9 +83,10 @@ public class StoryService {
 		service.post("http://jabahan.com/storybook/story/addNarrative.php", data);
 		service.execute();
 	}
-    public static void search(String levelId, Service service){
+    public static void search(String levelId, Service service, boolean isStory){
         RequestParams params = new RequestParams();
-        service.post("http://jabahan.com/storybook/story/search.php?levelId="+levelId, params);
+		String table = isStory ? "STORYNARRATIVE" : "LESSONNARRATIVE";
+        service.post("http://jabahan.com/storybook/story/search.php?levelId="+levelId+"&table="+table, params);
         service.execute();
     }
 	public static void searchImages(String storyId, Service service){

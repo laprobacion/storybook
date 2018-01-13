@@ -23,6 +23,7 @@ import com.read.storybook.util.AppConstants;
 import com.read.storybook.util.Player;
 import com.read.storybook.util.Util;
 
+import java.util.List;
 
 
 public class PageStoryFragment extends Fragment {
@@ -35,19 +36,21 @@ public class PageStoryFragment extends Fragment {
     public static final String PAGE_TO_SHOW = "PAGE_TO_SHOW";
     public static final String PAGE_LEFT = "PAGE_LEFT";
     public static final String IS_LESSON = "IS_LESSON";
+    public static final String LESSONNARRATIVE_STORY = "LESSONNARRATIVE_STORY";
     Player audio;
     Button audioButton;
     TextView status;
     Sound soundToLoad = null;
     String currentPage;
     Story story = null;
+    Story lessonNarrativeStory = null;
     boolean fragmentResume,fragmentVisible,fragmentOnCreated,isSoundExecuted;
     public PageStoryFragment() {
 
 
     }
 
-    public static final PageStoryFragment newInstance(String message, Bitmap bitmap, boolean isLast, Story story, String paging, boolean hasLesson, boolean isLesson, String pageLeft)
+    public static final PageStoryFragment newInstance(String message, Bitmap bitmap, boolean isLast, Story story, String paging, boolean hasLesson, boolean isLesson, String pageLeft,List<Sound> soundList)
     {
         PageStoryFragment f = new PageStoryFragment();
         Bundle bdl = new Bundle(1);
@@ -59,6 +62,11 @@ public class PageStoryFragment extends Fragment {
         bdl.putBoolean(PAGE_TO_SHOW,hasLesson);
         bdl.putBoolean(IS_LESSON,isLesson);
         bdl.putSerializable(STORY, story);
+        if(soundList != null){
+            Story lessonNarrativeStory = new Story();
+            lessonNarrativeStory.setSoundList(soundList);
+            bdl.putSerializable(LESSONNARRATIVE_STORY,lessonNarrativeStory);
+        }
         f.setArguments(bdl);
         return f;
     }
@@ -75,6 +83,7 @@ public class PageStoryFragment extends Fragment {
         messageTextView.setText("");
         ImageView iv = (ImageView) v.findViewById(R.id.imageStory);
         story = (Story)getArguments().getSerializable(STORY);
+        lessonNarrativeStory = (Story)getArguments().getSerializable(LESSONNARRATIVE_STORY);
         currentPage = getArguments().getString(PAGING).split(" of ")[0];
         status = (TextView) v.findViewById(R.id.status);
         audioButton = (Button) v.findViewById(R.id.playAudio);
@@ -140,8 +149,16 @@ public class PageStoryFragment extends Fragment {
     }
     private void initAudio(){
         if(getArguments().getBoolean(IS_LESSON)){
-            audioButton.setVisibility(View.INVISIBLE);
-            status.setVisibility(View.INVISIBLE);
+            if(lessonNarrativeStory != null){
+                for(Sound sound : lessonNarrativeStory.getSoundList()){
+                    if(sound.getPriority().equals(currentPage)){
+                        soundToLoad = sound;
+                        audio = new Player(status,audioButton,true);
+                        addAudioButtonListener();
+                        break;
+                    }
+                }
+            }
         }else{
             if(story.getSoundList() != null){
                 for(Sound sound : story.getSoundList()){
@@ -153,17 +170,17 @@ public class PageStoryFragment extends Fragment {
                     }
                 }
             }
-            if(soundToLoad != null){
-                audioButton.setVisibility(View.VISIBLE);
-                status.setVisibility(View.VISIBLE);
-                if (!fragmentResume && fragmentVisible){   //only when first time fragment is created
-                    playNarrative();
-                }
-
-            }else{
-                audioButton.setVisibility(View.INVISIBLE);
-                status.setVisibility(View.INVISIBLE);
+        }
+        if(soundToLoad != null){
+            audioButton.setVisibility(View.VISIBLE);
+            status.setVisibility(View.VISIBLE);
+            if (!fragmentResume && fragmentVisible){   //only when first time fragment is created
+                playNarrative();
             }
+
+        }else{
+            audioButton.setVisibility(View.INVISIBLE);
+            status.setVisibility(View.INVISIBLE);
         }
     }
     private void addAudioButtonListener(){

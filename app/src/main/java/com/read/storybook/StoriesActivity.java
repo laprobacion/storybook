@@ -80,7 +80,7 @@ public class StoriesActivity extends AppCompatActivity {
                 }catch (Exception e){e.printStackTrace();}
             }
         });
-        StoryService.search(level.getId(),service);
+        StoryService.search(level.getId(),service,!isLesson);
     }
 
 

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.read.storybook.Image.ImageLoader;
 import com.read.storybook.model.Image;
 import com.read.storybook.model.Lesson;
+import com.read.storybook.model.Sound;
 import com.read.storybook.model.Story;
 import com.read.storybook.service.Service;
 import com.read.storybook.service.ServiceResponse;
@@ -32,6 +33,7 @@ public class LessonActivity extends AppCompatActivity {
     Story tempStory = new Story();
     ImageLoader imageLoader;
     boolean isLesson;
+    List<Sound> soundList;
     public static final String CURRENT_PAGE = "CURRENT_PAGE";
     private List<Fragment> getFragments() {
         List<Fragment> fList = new ArrayList<Fragment>();
@@ -39,7 +41,7 @@ public class LessonActivity extends AppCompatActivity {
         story.addImage(new Image("blank"));
         for(int i=0;i<story.getImages().size();i++){
             String page = (i + 1) + " of " + story.getImages().size();
-            fList.add(PageStoryFragment.newInstance(title.getText().toString(), story.getImages().get(i).getBitmap(), (i + 1) == story.getImages().size(), tempStory, page, false, true,pageLeft));
+            fList.add(PageStoryFragment.newInstance(title.getText().toString(), story.getImages().get(i).getBitmap(), (i + 1) == story.getImages().size(), tempStory, page, false, true,pageLeft,soundList));
         }
         return fList;
     }
@@ -53,10 +55,32 @@ public class LessonActivity extends AppCompatActivity {
         tempStory.setId(story.getId());
         title = (TextView) findViewById(R.id.mainStoryTitle);
         title.setText(story.getTitle());
-        searchImages(story);
+        searchLessonNarratives();
         AppCache.getInstance().setPageOneDestroyed(false);
+        imageLoader = new ImageLoader(this, story, tempStory, true);
     }
 
+    private void searchLessonNarratives(){
+        Service service = new Service("Searching Narratives", LessonActivity.this, new ServiceResponse() {
+            @Override
+            public void postExecute(JSONObject resp) {
+                try {
+                    JSONArray arr = resp.optJSONArray("records");
+                    if(arr != null && arr.length() > 0){
+                        soundList = new ArrayList<Sound>();
+                    }
+                    for( int i=0; i< arr.length(); i++){
+                        JSONObject obj = arr.optJSONObject(i);
+                        Sound sound = new Sound(obj.optString("narrative"));
+                        sound.setPriority(obj.optString("priority"));
+                        soundList.add(sound);
+                    }
+                    searchImages(story);
+                }catch (Exception e){e.printStackTrace();}
+            }
+        });
+        StoryService.searchNarratives(story.getId(), service);
+    }
     private void searchImages(final Story story){
         Service service = new Service("Loading resources...", LessonActivity.this, new ServiceResponse() {
             @Override

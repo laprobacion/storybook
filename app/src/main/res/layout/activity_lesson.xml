@@ -19,6 +19,18 @@
         android:inputType="textPersonName"
         android:text="text"
         />
+    <Button
+        android:id="@+id/btnNarrative"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:textAllCaps="false"
+        android:layout_marginEnd="160dp"
+        android:layout_marginRight="160dp"
+        android:text="Add Narrative"
+        android:visibility="invisible" />
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="fill_parent"

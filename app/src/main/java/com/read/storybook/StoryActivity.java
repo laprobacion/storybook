@@ -46,7 +46,7 @@ public class StoryActivity extends FragmentActivity{
         for(Image i : story.getImages()){
             String page = (ctr + 1) + " of " + story.getImages().size();
             boolean hasLesson = pageToShow != null ? pageToShow == (ctr + 1): false;
-            fList.add(PageStoryFragment.newInstance(title.getText().toString(), i.getBitmap(), (ctr + 1) == story.getImages().size(), tempStory, page, hasLesson, false,null));
+            fList.add(PageStoryFragment.newInstance(title.getText().toString(), i.getBitmap(), (ctr + 1) == story.getImages().size(), tempStory, page, hasLesson, false,null,null));
             ctr++;
         }
         return fList;
@@ -82,15 +82,9 @@ public class StoryActivity extends FragmentActivity{
         pageToLoad = getIntent().getStringExtra(LessonActivity.CURRENT_PAGE);
         if(!isLesson){
             tempStory.setTitle(story.getTitle());
-            imageLoader = new ImageLoader(this, story, tempStory, pageToLoad == null);
             fab.setVisibility(View.INVISIBLE);
-            if(story.getSoundList() != null && story.getSoundList().size() > 0){
-                imageLoader.setBtnNarrative(View.INVISIBLE);
-            }else{
-                imageLoader.setBtnNarrative(View.VISIBLE);
-            }
-
         }
+        imageLoader = new ImageLoader(this, story, tempStory, isLesson);
         title = (TextView) findViewById(R.id.mainStoryTitle);
         title.setText(story.getTitle());
         searchImages(story);
@@ -172,7 +166,7 @@ public class StoryActivity extends FragmentActivity{
 
         }
         if(executeBitmap){
-            if(imageLoader != null){
+            if(imageLoader != null && !isLesson){
                 imageLoader.getQuestions(story.getId(), story);
             }
             getBitmaps(story);

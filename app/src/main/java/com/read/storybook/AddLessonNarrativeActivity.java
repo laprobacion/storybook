@@ -158,7 +158,8 @@ public class AddLessonNarrativeActivity extends AppCompatActivity {
                 }catch (Exception e){e.printStackTrace();}
             }
         });
-        StoryService.addNarrative(story, service);
+        boolean isStory = Boolean.valueOf(getIntent().getStringExtra(AppConstants.STORY_IS_STORY));
+        StoryService.addNarrative(story, service, isStory);
     }
     private String validate(){
         String msg = "";

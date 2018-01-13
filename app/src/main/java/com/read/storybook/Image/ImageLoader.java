@@ -9,9 +9,11 @@ import android.widget.TextView;
 
 import com.read.storybook.AddLessonNarrativeActivity;
 import com.read.storybook.AddQuestionActivity;
+import com.read.storybook.LessonActivity;
 import com.read.storybook.R;
 import com.read.storybook.StoryActivity;
 import com.read.storybook.model.Choice;
+import com.read.storybook.model.Lesson;
 import com.read.storybook.model.Question;
 import com.read.storybook.model.Story;
 import com.read.storybook.model.User;
@@ -30,19 +32,29 @@ import java.util.List;
 
 public class ImageLoader {
     Button createExam,btnNarrative,btnLesson;
-    StoryActivity activity;
+    Activity activity;
     Story story;
     Story tempStory;
+    boolean isLesson;
 
-
-    public ImageLoader(StoryActivity activity, Story story, Story tempStory, boolean isPlayingDefault){
+    public ImageLoader(Activity activity, Story story, Story tempStory, boolean isLesson){
         this.activity = activity;
         this.story = story;
         this.tempStory = tempStory;
-        createExam = (Button) activity.findViewById(R.id.createExam);
+        this.isLesson = isLesson;
         btnNarrative = (Button) activity.findViewById(R.id.btnNarrative);
-        btnLesson = (Button) activity.findViewById(R.id.btnLesson);
+        if(!isLesson){
+            btnLesson = (Button) activity.findViewById(R.id.btnLesson);
+            createExam = (Button) activity.findViewById(R.id.createExam);
+        }
+        if(story.getSoundList() != null && story.getSoundList().size() > 0){
+            setBtnNarrative(View.INVISIBLE);
 
+        }else{
+            if(AppCache.getInstance().getUser().isAdmin()){
+                setBtnNarrative(View.VISIBLE);
+            }
+        }
         //remove this
         setOnClickListeners();
     }
@@ -90,7 +102,12 @@ public class ImageLoader {
                     if(user.isAdmin() && tempStory != null && tempStory.getQuestions() == null){
                         createExam.setVisibility(View.VISIBLE);
                     }
-                    activity.getBitmaps(story);
+                    if(activity instanceof StoryActivity){
+                        ((StoryActivity)activity).getBitmaps(story);
+                    }else{
+                        ((LessonActivity)activity).getBitmaps(story);
+                    }
+
                 }catch (Exception e){e.printStackTrace();}
             }
         });
@@ -109,10 +126,14 @@ public class ImageLoader {
                 Intent myIntent = new Intent(activity, AddLessonNarrativeActivity.class);
                 myIntent.putExtra(AppConstants.STORY_ID,story.getId());
                 myIntent.putExtra(AppConstants.STORY_NARRATIVE,story.getId());
+                myIntent.putExtra(AppConstants.STORY_IS_STORY,String.valueOf(!ImageLoader.this.isLesson));
                 activity.startActivity(myIntent);
                 activity.finish();
             }
         });
+        if(isLesson){
+            return;
+        }
         btnLesson.setOnClickListener(new View.OnClickListener() {
 
             @Override

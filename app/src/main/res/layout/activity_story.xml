@@ -64,6 +64,19 @@
         android:visibility="invisible" />
 
 
+    <Button
+        android:id="@+id/pageAdd"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="363dp"
+        android:layout_marginRight="363dp"
+        android:text="+Page"
+        android:textSize="8dp"
+        android:textAllCaps="false"
+        android:visibility="visible" />
 
     <android.support.v4.view.ViewPager
             android:id="@+id/viewpager"
@@ -75,12 +88,12 @@
 
         </android.support.v4.view.ViewPager>
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:visibility="invisible"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="550dp"
-        android:layout_marginTop="300dp"
-        app:srcCompat="@android:drawable/ic_menu_add"
-        app:backgroundTint="@color/colorPrimaryDark"/>
+    android:id="@+id/fab"
+    android:layout_width="wrap_content"
+    android:visibility="invisible"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="550dp"
+    android:layout_marginTop="300dp"
+    app:srcCompat="@android:drawable/ic_menu_add"
+    app:backgroundTint="@color/colorPrimaryDark"/>
 </RelativeLayout>

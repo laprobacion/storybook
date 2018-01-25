@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ImageLoader {
-    Button createExam,btnNarrative,btnLesson;
+    Button createExam,btnNarrative,btnLesson,pageAdd;
     Activity activity;
     Story story;
     Story tempStory;
@@ -43,9 +43,11 @@ public class ImageLoader {
         this.tempStory = tempStory;
         this.isLesson = isLesson;
         btnNarrative = (Button) activity.findViewById(R.id.btnNarrative);
+
         if(!isLesson){
             btnLesson = (Button) activity.findViewById(R.id.btnLesson);
             createExam = (Button) activity.findViewById(R.id.createExam);
+            pageAdd = (Button) activity.findViewById(R.id.pageAdd);
         }
         if(story.getSoundList() != null && story.getSoundList().size() > 0){
             setBtnNarrative(View.INVISIBLE);
@@ -155,9 +157,21 @@ public class ImageLoader {
                 activity.finish();
             }
         });
+        pageAdd.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                Intent myIntent = new Intent(activity, AddLessonNarrativeActivity.class);
+                myIntent.putExtra(AppConstants.STORY_ID,story.getId());
+                myIntent.putExtra(AppConstants.STORY_ADD,story.getId());
+                myIntent.putExtra(AppConstants.STORY_LESSON,story.getId());
+                activity.startActivity(myIntent);
+                activity.finish();
+            }
+        });
     }
 
     public void setBtnNarrative(int v){
-        btnNarrative.setVisibility(v);
+        btnNarrative.setVisibility(View.VISIBLE);
     }
 }

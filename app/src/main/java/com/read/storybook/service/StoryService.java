@@ -47,7 +47,7 @@ public class StoryService {
 		service.post("http://jabahan.com/storybook/story/create.php", data);
 		service.execute();
 	}
-	public static void addLesson(final Story story, Service service){
+	public static void addLesson(final Story story, Service service, String php){
 		HashMap<String,String> data = new HashMap<String,String> ();
 		data.put("id", story.getId());
 		data.put("imageCount", String.valueOf(story.getImages().size()));
@@ -60,7 +60,7 @@ public class StoryService {
 			data.put("ext"+id, image.getExtension());
 			i++;
 		}
-		service.post("http://jabahan.com/storybook/story/addLesson.php", data);
+		service.post("http://jabahan.com/storybook/story/"+php+".php", data);
 		service.execute();
 	}
 

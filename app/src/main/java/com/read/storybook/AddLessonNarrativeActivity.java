@@ -140,7 +140,13 @@ public class AddLessonNarrativeActivity extends AppCompatActivity {
                 }catch (Exception e){e.printStackTrace();}
             }
         });
-        StoryService.addLesson(story, service);
+        String php = "";
+        if(getIntent().getStringExtra(AppConstants.STORY_ADD) != null){
+            php = "addPage";
+        }else{
+            php = "addLesson";
+        }
+        StoryService.addLesson(story, service,php);
     }
 
     private void addNarrative(final Story story){

@@ -11,6 +11,7 @@ public class AppConstants {
     public static final String LEVEL_ID = "levelId";
     public static final String STORY_OBJ = "STORY_OBJ";
     public static final String STORY_ID = "STORY_ID";
+    public static final String STORY_ADD = "STORY_ADD";
     public static final String RETRIEVE_IMG = "RETRIEVE_IMG";
     public static final String QUESTIONS = "QUESTIONS";
     public static final String EXAM_PAGING = "EXAM_PAGING";

@@ -34,7 +34,9 @@ class MyPageAdapter extends FragmentPagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        ((PageStoryFragment)object).destroyAudio();
+        if(object instanceof PageStoryFragment){
+            ((PageStoryFragment)object).destroyAudio();
+        }
         super.destroyItem(container, position, object);
     }
 

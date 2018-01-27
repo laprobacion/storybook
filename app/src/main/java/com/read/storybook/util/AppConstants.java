@@ -20,4 +20,5 @@ public class AppConstants {
     public static final String STORY_LESSON = "STORY_LESSON";
     public static final String STORY_NARRATIVE = "STORY_NARRATIVE";
     public static final String STORY_IS_STORY = "STORY_IS_STORY";
+    public static final String LESSON_FOR = "Lesson for";
 }

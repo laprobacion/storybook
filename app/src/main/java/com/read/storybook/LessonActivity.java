@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static com.read.storybook.util.AppConstants.LESSON_FOR;
+
 public class LessonActivity extends AppCompatActivity {
 
     Story story;
@@ -41,7 +43,7 @@ public class LessonActivity extends AppCompatActivity {
         story.addImage(new Image("blank"));
         for(int i=0;i<story.getImages().size();i++){
             String page = (i + 1) + " of " + story.getImages().size();
-            fList.add(PageStoryFragment.newInstance(title.getText().toString(), story.getImages().get(i).getBitmap(), (i + 1) == story.getImages().size(), tempStory, page, false, true,pageLeft,soundList));
+            fList.add(PageStoryFragment.newInstance(title.getText().toString(), story.getImages().get(i), (i + 1) == story.getImages().size(), tempStory, page, false, true,pageLeft,soundList));
         }
         return fList;
     }
@@ -68,12 +70,12 @@ public class LessonActivity extends AppCompatActivity {
                     JSONArray arr = resp.optJSONArray("records");
                     if(arr != null && arr.length() > 0){
                         soundList = new ArrayList<Sound>();
-                    }
-                    for( int i=0; i< arr.length(); i++){
-                        JSONObject obj = arr.optJSONObject(i);
-                        Sound sound = new Sound(obj.optString("narrative"));
-                        sound.setPriority(obj.optString("priority"));
-                        soundList.add(sound);
+                        for( int i=0; i< arr.length(); i++){
+                            JSONObject obj = arr.optJSONObject(i);
+                            Sound sound = new Sound(obj.optString("narrative"));
+                            sound.setPriority(obj.optString("priority"));
+                            soundList.add(sound);
+                        }
                     }
                     searchImages(story);
                 }catch (Exception e){e.printStackTrace();}
@@ -108,7 +110,7 @@ public class LessonActivity extends AppCompatActivity {
     }
     private void getImages(JSONObject resp, Story story,boolean executeBitmap){
         JSONArray arr = resp.optJSONArray("records");
-        title.setText("Lesson for " + title.getText().toString());
+        title.setText(LESSON_FOR + " " + title.getText().toString());
         for( int i=0; i< arr.length(); i++){
             JSONObject obj = arr.optJSONObject(i);
             story.addImage(new Image(obj.optString("image")));

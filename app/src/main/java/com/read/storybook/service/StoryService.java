@@ -110,6 +110,20 @@ public class StoryService {
 		service.post("http://jabahan.com/storybook/story/delete.php", params);
 		Util.delete(activity,service);
 	}
+	public static void deleteImage(Context activity, String imageId,String page,boolean isLesson, Service service){
+		RequestParams params = new RequestParams();
+		params.put("imageId", imageId);
+		params.put("page", page);
+		String table = "";
+		if(isLesson){
+			table = "STORYLESSON";
+		}else{
+			table = "STORYIMAGE";
+		}
+		params.put("table", table);
+		service.post("http://jabahan.com/storybook/story/deleteImage.php", params);
+		Util.delete(activity,service);
+	}
 	public static int getScore(User user, Story story){
 		return new UserStoryDao().getStoriesAndScores(user).get(story.getId());
 	}

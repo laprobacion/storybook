@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static com.read.storybook.util.AppConstants.LESSON_FOR;
+
 public class StoryActivity extends FragmentActivity{
     Story story;
     TextView title;
@@ -46,7 +48,7 @@ public class StoryActivity extends FragmentActivity{
         for(Image i : story.getImages()){
             String page = (ctr + 1) + " of " + story.getImages().size();
             boolean hasLesson = pageToShow != null ? pageToShow == (ctr + 1): false;
-            fList.add(PageStoryFragment.newInstance(title.getText().toString(), i.getBitmap(), (ctr + 1) == story.getImages().size(), tempStory, page, hasLesson, false,null,null));
+            fList.add(PageStoryFragment.newInstance(title.getText().toString(), i, (ctr + 1) == story.getImages().size(), tempStory, page, hasLesson, false,null,null));
             ctr++;
         }
         return fList;
@@ -153,15 +155,21 @@ public class StoryActivity extends FragmentActivity{
                 title.setText("No available lesson.");
                 fab.setVisibility(View.VISIBLE);
             }else{
-                title.setText("Lesson for " + title.getText().toString());
+                title.setText(LESSON_FOR + " " + title.getText().toString());
             }
         }
         for( int i=0; i< arr.length(); i++){
             JSONObject obj = arr.optJSONObject(i);
             if(!executeBitmap){
-                tempStory.addLesson(new Lesson(obj.optString("image")));
+                Lesson lesson = new Lesson(obj.optString("image"));
+                lesson.setId(obj.optString("id"));
+                lesson.setPriority(obj.optString("priority"));
+                tempStory.addLesson(lesson);
             }else{
-                story.addImage(new Image(obj.optString("image")));
+                Image image = new Image(obj.optString("image"));
+                image.setId(obj.optString("id"));
+                image.setPriority(obj.optString("priority"));
+                story.addImage(image);
             }
 
         }

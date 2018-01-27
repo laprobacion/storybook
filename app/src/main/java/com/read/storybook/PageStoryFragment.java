@@ -16,14 +16,22 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.read.storybook.model.Image;
 import com.read.storybook.model.Sound;
 import com.read.storybook.model.Story;
+import com.read.storybook.service.Service;
+import com.read.storybook.service.ServiceResponse;
+import com.read.storybook.service.StoryService;
 import com.read.storybook.util.AppCache;
 import com.read.storybook.util.AppConstants;
 import com.read.storybook.util.Player;
 import com.read.storybook.util.Util;
 
+import org.json.JSONObject;
+
 import java.util.List;
+
+import static com.read.storybook.util.AppConstants.LESSON_FOR;
 
 
 public class PageStoryFragment extends Fragment {
@@ -36,6 +44,8 @@ public class PageStoryFragment extends Fragment {
     public static final String PAGE_TO_SHOW = "PAGE_TO_SHOW";
     public static final String PAGE_LEFT = "PAGE_LEFT";
     public static final String IS_LESSON = "IS_LESSON";
+    public static final String IMAGE_ID = "IMAGE_ID";
+    public static final String PRIORITY = "PRIORITY";
     public static final String LESSONNARRATIVE_STORY = "LESSONNARRATIVE_STORY";
     Player audio;
     Button audioButton;
@@ -50,12 +60,14 @@ public class PageStoryFragment extends Fragment {
 
     }
 
-    public static final PageStoryFragment newInstance(String message, Bitmap bitmap, boolean isLast, Story story, String paging, boolean hasLesson, boolean isLesson, String pageLeft,List<Sound> soundList)
+    public static final PageStoryFragment newInstance(String message, Image i, boolean isLast, Story story, String paging, boolean hasLesson, boolean isLesson, String pageLeft, List<Sound> soundList)
     {
         PageStoryFragment f = new PageStoryFragment();
         Bundle bdl = new Bundle(1);
         bdl.putString(PAGE_TITLE, message);
-        bdl.putParcelable(IMAGE, bitmap);
+        bdl.putParcelable(IMAGE, i.getBitmap());
+        bdl.putString(IMAGE_ID, i.getId());
+        bdl.putString(PRIORITY, i.getPriority());
         bdl.putBoolean(IS_LAST,isLast);
         bdl.putString(PAGING, paging);
         bdl.putString(PAGE_LEFT, pageLeft);
@@ -76,6 +88,7 @@ public class PageStoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         String message = getArguments().getString(PAGE_TITLE);
         Bitmap bitmap = getArguments().getParcelable(IMAGE);
+        final String id = getArguments().getString(IMAGE_ID);
         boolean isLast = getArguments().getBoolean(IS_LAST);
         String pageLeft = getArguments().getString(PAGE_LEFT);
         View v = inflater.inflate(R.layout.fragment_page_story, container, false);
@@ -88,7 +101,7 @@ public class PageStoryFragment extends Fragment {
         status = (TextView) v.findViewById(R.id.status);
         audioButton = (Button) v.findViewById(R.id.playAudio);
 
-        RelativeLayout parent = (RelativeLayout)v.findViewById(R.id.myfragment_layout);
+        final RelativeLayout parent = (RelativeLayout)v.findViewById(R.id.myfragment_layout);
         iv.setImageBitmap(bitmap);
         iv.setMinimumWidth(3000);
         iv.setMinimumHeight(1000);
@@ -106,7 +119,7 @@ public class PageStoryFragment extends Fragment {
                getActivity().finish();
             }
         });
-        TextView pageNo = v.findViewById(R.id.paging);
+        final TextView pageNo = v.findViewById(R.id.paging);
 
         pageNo.setText(getArguments().getString(PAGING));
         initAudio();
@@ -123,6 +136,23 @@ public class PageStoryFragment extends Fragment {
         if(getArguments().getBoolean(IS_LESSON) && isLast){
             createWindow(30,parent, "You have finished the ",story,pageNo.getText().toString(), true,pageLeft);
             parent.invalidate();
+        }
+        if(AppCache.getInstance().getUser().isAdmin() && id != null && id.length() > 0){
+            iv.setLongClickable(true);
+            iv.setOnLongClickListener(new View.OnLongClickListener() {
+
+                @Override
+                public boolean onLongClick(View v) {
+                    Service service = new Service("Deleting Image...", parent.getContext(), new ServiceResponse() {
+                        @Override
+                        public void postExecute(JSONObject resp) {
+                        }
+                    });
+                    boolean isPageLesson = getArguments().getString(PAGE_TITLE).indexOf(LESSON_FOR) > -1;
+                    StoryService.deleteImage(parent.getContext(), id,getArguments().getString(PRIORITY),isPageLesson, service);
+                    return true;
+                }
+            });
         }
         return v;
     }

@@ -13,7 +13,6 @@ import java.io.InputStreamReader;
 public class Storage {
     private static String FILENAME = "storage";
     public static void save(Context context, User user) {
-
         try {
             FileOutputStream fos = context.getApplicationContext().openFileOutput(FILENAME, Context.MODE_PRIVATE);
             fos.write(user.getUsername().getBytes());
@@ -25,7 +24,6 @@ public class Storage {
     }
 
     public static void remove(Context context, User user) {
-
         try {
             FileOutputStream fos = context.getApplicationContext().openFileOutput(FILENAME, Context.MODE_PRIVATE);
             fos.write("".getBytes());

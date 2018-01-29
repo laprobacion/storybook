@@ -17,8 +17,10 @@ import com.read.storybook.model.Choice;
 import com.read.storybook.model.Question;
 import com.read.storybook.model.Story;
 import com.read.storybook.service.ChoiceService;
+import com.read.storybook.service.QuestionService;
 import com.read.storybook.service.Service;
 import com.read.storybook.service.ServiceResponse;
+import com.read.storybook.service.StoryService;
 import com.read.storybook.service.UserStoryService;
 import com.read.storybook.util.AppCache;
 import com.read.storybook.util.AppConstants;
@@ -26,6 +28,8 @@ import com.read.storybook.util.AppConstants;
 import org.json.JSONObject;
 
 import java.util.List;
+
+import static com.read.storybook.util.AppConstants.LESSON_FOR;
 
 
 public class PageExamFragment extends Fragment {
@@ -58,7 +62,7 @@ public class PageExamFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Question q = (Question) getArguments().getSerializable(AppConstants.QUESTIONS);
+        final Question q = (Question) getArguments().getSerializable(AppConstants.QUESTIONS);
         storyId = getArguments().getString(AppConstants.STORY_ID);
         this.isLast = getArguments().getBoolean(AppConstants.EXAM_IS_LAST);
         View v = inflater.inflate(R.layout.fragment_page_exam, container, false);
@@ -92,6 +96,22 @@ public class PageExamFragment extends Fragment {
                 save(correctCount, act.getFragments().size());
             }
         });
+        if(AppCache.getInstance().getUser().isAdmin()){
+            v.setLongClickable(true);
+            v.setOnLongClickListener(new View.OnLongClickListener() {
+
+                @Override
+                public boolean onLongClick(View v) {
+                    Service service = new Service("Deleting Question...", v.getContext(), new ServiceResponse() {
+                        @Override
+                        public void postExecute(JSONObject resp) {
+                        }
+                    });
+                    QuestionService.deleteQuestion(v.getContext(),q.getId(),service);
+                    return true;
+                }
+            });
+        }
         return v;
     }
     private void save(int score, int item){

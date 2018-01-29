@@ -1,5 +1,7 @@
 package com.read.storybook.service;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,6 +26,12 @@ public class QuestionService {
 		params.put("storyId", storyId);
 		service.post("http://jabahan.com/storybook/question/search.php", params);
 		service.execute();
+	}
+	public static void deleteQuestion(Context act, String questionId, Service service){
+		RequestParams params = new RequestParams();
+		params.put("questionId", questionId);
+		service.post("http://jabahan.com/storybook/question/delete.php", params);
+		Util.delete(act,service);
 	}
 	public static void create(String storyId, Question q, Service service){
 		HashMap<String,String> data = new HashMap<String,String> ();

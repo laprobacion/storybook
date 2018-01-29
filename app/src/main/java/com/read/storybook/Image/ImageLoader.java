@@ -44,9 +44,9 @@ public class ImageLoader {
         this.isLesson = isLesson;
         btnNarrative = (Button) activity.findViewById(R.id.btnNarrative);
         pageAdd = (Button) activity.findViewById(R.id.pageAdd);
+        createExam = (Button) activity.findViewById(R.id.createExam);
         if(!isLesson){
             btnLesson = (Button) activity.findViewById(R.id.btnLesson);
-            createExam = (Button) activity.findViewById(R.id.createExam);
         }
         if(AppCache.getInstance().getUser().isAdmin()){
             setBtnNarrative(View.VISIBLE);
@@ -95,7 +95,7 @@ public class ImageLoader {
                     tempStory.setId(storyId);
                     tempStory.setQuestions( createQuestions(resp));
                     User user = AppCache.getInstance().getUser();
-                    if(user.isAdmin() && tempStory != null && tempStory.getQuestions() == null){
+                    if(user.isAdmin()){
                         createExam.setVisibility(View.VISIBLE);
                     }
                     if(activity instanceof StoryActivity){

@@ -49,7 +49,14 @@ public class ImageLoader {
             btnLesson = (Button) activity.findViewById(R.id.btnLesson);
         }
         if(AppCache.getInstance().getUser().isAdmin()){
-            setBtnNarrative(View.VISIBLE);
+            btnNarrative.setVisibility(View.VISIBLE);
+            pageAdd.setVisibility(View.VISIBLE);
+            if(!isLesson)
+                createExam.setVisibility(View.VISIBLE);
+        }else {
+            btnNarrative.setVisibility(View.INVISIBLE);
+            pageAdd.setVisibility(View.INVISIBLE);
+            createExam.setVisibility(View.INVISIBLE);
         }
         //remove this
         setOnClickListeners();
@@ -171,7 +178,4 @@ public class ImageLoader {
 
     }
 
-    public void setBtnNarrative(int v){
-        btnNarrative.setVisibility(View.VISIBLE);
-    }
 }

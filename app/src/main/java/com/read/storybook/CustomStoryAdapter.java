@@ -98,6 +98,7 @@ public class CustomStoryAdapter extends BaseAdapter {
                 myIntent.putExtra(AppConstants.STORY_OBJ,s);
                 mainActivity.startActivity(myIntent);
                 //mainActivity.finish();
+                System.gc();
             }
         });
         if(AppCache.getInstance().getUser().isAdmin()){

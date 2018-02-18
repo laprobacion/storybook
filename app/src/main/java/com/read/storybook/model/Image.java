@@ -12,7 +12,15 @@ public class Image extends BaseModel{
     private Bitmap bitmap;
     private String priority;
     private String url;
+    private String ans;
 
+    public String getAns() {
+        return ans;
+    }
+
+    public void setAns(String ans) {
+        this.ans = ans;
+    }
 
     public Image(String url){
         this.url = url;

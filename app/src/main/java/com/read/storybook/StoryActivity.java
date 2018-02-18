@@ -37,6 +37,7 @@ public class StoryActivity extends FragmentActivity{
     Integer pageToShow;
     String pageToLoad;
     FloatingActionButton fab;
+    CustomViewPager pager;
     private List<Fragment> getFragments() {
         List<Fragment> fList = new ArrayList<Fragment>();
         int ctr = 0;
@@ -67,7 +68,7 @@ public class StoryActivity extends FragmentActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_story);
-
+        pager = (CustomViewPager)findViewById(R.id.viewpager);
         isLesson = Boolean.valueOf(getIntent().getStringExtra(LevelsActivity.IS_LESSON));
         story = (Story)getIntent().getSerializableExtra(AppConstants.STORY_OBJ);
         tempStory.setSoundList(story.getSoundList());
@@ -91,6 +92,7 @@ public class StoryActivity extends FragmentActivity{
         title.setText(story.getTitle());
         searchImages(story);
         AppCache.getInstance().setPageOneDestroyed(false);
+        AppCache.getInstance().clearQuestionPages(pager);
     }
 
     private void searchImages(final Story story){
@@ -130,16 +132,21 @@ public class StoryActivity extends FragmentActivity{
                 try {
                     List<Fragment> fragments = getFragments();
                     pageAdapter = new MyPageAdapter(getSupportFragmentManager(), fragments);
-                    ViewPager pager = (ViewPager)findViewById(R.id.viewpager);
+
                     pager.setAdapter(pageAdapter);
                     if(pageToLoad != null){
                         pager.setCurrentItem(Integer.valueOf(pageToLoad) - 1);
                     }
+                    //pager.setPagingEnabled(false);
                     pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                        public void onPageScrollStateChanged(int state) {}
+                        public void onPageScrollStateChanged(int state) {
+                            String br = "";
+                        }
+
                         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
                         public void onPageSelected(int position) {
+                           pager.setPagingEnabled(AppCache.getInstance().isQuestionPageAnswered(position+1));
                         }
                     });
 
@@ -148,7 +155,13 @@ public class StoryActivity extends FragmentActivity{
         });
         StoryService.populateImages(story, service);
     }
-    private void getImages(JSONObject resp, Story story,boolean executeBitmap){
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    private void getImages(JSONObject resp, Story story, boolean executeBitmap){
         JSONArray arr = resp.optJSONArray("records");
         if(isLesson){
             if(arr == null) {
@@ -169,6 +182,10 @@ public class StoryActivity extends FragmentActivity{
                 Image image = new Image(obj.optString("image"));
                 image.setId(obj.optString("id"));
                 image.setPriority(obj.optString("priority"));
+                image.setAns(obj.optString("ans"));
+                if(image.getAns()!=null && !image.getAns().trim().equals("")){
+                    AppCache.getInstance().addQuestionPage(i);
+                }
                 story.addImage(image);
             }
 

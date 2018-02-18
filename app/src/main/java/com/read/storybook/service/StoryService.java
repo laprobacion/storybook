@@ -57,6 +57,7 @@ public class StoryService {
 			data.put("imageid"+id, Util.generateId());
 			data.put("priority"+id, image.getPriority());
 			data.put("image"+id, image.getEncodedBitmap());
+			data.put("ans"+id, image.getAns());
 			data.put("ext"+id, image.getExtension());
 			i++;
 		}

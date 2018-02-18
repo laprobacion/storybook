@@ -18,8 +18,7 @@ public class UpdatesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_updates);
         TextView btnUpdateCheck = (TextView) findViewById(R.id.btnUpdateCheck);
         btnUpdateCheck.setTextColor(Color.argb(255,255,255,255));
-        btnUpdateCheck.setCompoundDrawablesWithIntrinsicBounds(
-                R.drawable.download, 0, 0, 0);
+        btnUpdateCheck.setCompoundDrawablesWithIntrinsicBounds(R.drawable.download, 0, 0, 0);
         btnUpdateCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

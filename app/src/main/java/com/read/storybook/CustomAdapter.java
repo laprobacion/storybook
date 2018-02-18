@@ -81,7 +81,8 @@ public class CustomAdapter extends BaseAdapter {
                 myIntent.putExtra(AppConstants.LEVEL_NAME,levels.get(position));
                 myIntent.putExtra(LevelsActivity.IS_LESSON,String.valueOf(isLesson));
                 mainActivity.startActivity(myIntent);
-                //mainActivity.finish();
+                //((Activity)mainActivity).finish();
+                System.gc();
             }
         });
         if(AppCache.getInstance().getUser().isAdmin()){

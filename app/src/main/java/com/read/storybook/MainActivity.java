@@ -37,13 +37,18 @@ public class MainActivity extends AppCompatActivity
         if( isSignedIn() ){
             ((Button)findViewById(R.id.registerBtn)).setVisibility(View.INVISIBLE); // Show Register button
             ((Button)findViewById(R.id.signInBtn)).setVisibility(View.INVISIBLE);   // Show SignIn button
-            ((DrawerLayout) findViewById(R.id.drawer_layout)).setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED ); // Unlock the Nagivation Drawer
+            //((DrawerLayout) findViewById(R.id.drawer_layout)).setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED ); // Unlock the Nagivation Drawer
 
+            ((DrawerLayout) findViewById(R.id.drawer_layout)).setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED ); // Permanent Locked
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             View header=navigationView.getHeaderView(0);
             // Set the username in Navigation Drawer header
             TextView name = (TextView)header.findViewById(R.id.headerName);
             name.setText(Storage.load(getApplicationContext()));
+
+            Intent i = new Intent(this,NavigationActivity.class);
+            this.startActivity(i);
+            finish();
         }else{
 
         }
@@ -117,9 +122,9 @@ public class MainActivity extends AppCompatActivity
             this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-        if( !isSignedIn()){
+        //if( !isSignedIn()){
             drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        }
+        //}
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }

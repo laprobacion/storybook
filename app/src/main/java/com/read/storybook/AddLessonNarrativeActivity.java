@@ -44,6 +44,7 @@ public class AddLessonNarrativeActivity extends AppCompatActivity {
     Button btnAction;
     EditText arrImageView [];
     EditText arrEditTxt [];
+    EditText ansEditTxt [];
     Image[] image;
     Sound[] sound;
     TextView addStoryErrMsg,filename;
@@ -105,6 +106,7 @@ public class AddLessonNarrativeActivity extends AppCompatActivity {
                     story.setId(getIntent().getStringExtra(AppConstants.STORY_ID));
                     if(getIntent().getStringExtra(AppConstants.STORY_LESSON) != null) {
                         for (int i = 0; i < arrImageView.length; i++) {
+                            image[i].setAns(ansEditTxt[i].getText().toString().trim());
                             image[i].setPriority(arrEditTxt[i].getText().toString().trim());
                             story.addImage(image[i]);
                         }
@@ -212,6 +214,7 @@ public class AddLessonNarrativeActivity extends AppCompatActivity {
             }
             arrImageView = new EditText[count];
             arrEditTxt = new EditText[count];
+            ansEditTxt = new EditText[count];
             image = new Image[count];
             sound = new Sound[count];
             int[] arrIds = new int[count];
@@ -247,7 +250,8 @@ public class AddLessonNarrativeActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-
+                RelativeLayout.LayoutParams ansLayout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                ansLayout.setMargins(700, top + 120, 0, 0);
                 RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 
                 RelativeLayout.LayoutParams lpTxt = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -265,12 +269,17 @@ public class AddLessonNarrativeActivity extends AppCompatActivity {
                 //lp.addRule(RelativeLayout.BELOW, parentId);
                 lp.setMargins(300, top + 120, 0, 0);
                 top += 200;
+
+                EditText ansTxt = new EditText(AddLessonNarrativeActivity.this);
+                ansTxt.setLayoutParams(ansLayout);
                 imageView.setLayoutParams(lp);
+                layout.addView(ansTxt);
                 layout.addView(txtPriority);
                 layout.addView(imageView);
                 arrIds[i] = imageView.getId();
                 arrImageView[i] = imageView;
                 arrEditTxt[i] = txtPriority;
+                ansEditTxt[i] = ansTxt;
                 if(getIntent().getStringExtra(AppConstants.STORY_LESSON) != null) {
                     image[i] = new Image(getContentResolver().getType(selectedImage), bitmap, txtPriority.getText().toString());
                 }else{

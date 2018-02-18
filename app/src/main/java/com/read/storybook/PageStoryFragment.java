@@ -1,9 +1,13 @@
 package com.read.storybook;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -47,12 +52,15 @@ public class PageStoryFragment extends Fragment {
     public static final String IMAGE_ID = "IMAGE_ID";
     public static final String PRIORITY = "PRIORITY";
     public static final String LESSONNARRATIVE_STORY = "LESSONNARRATIVE_STORY";
+    public static final String PAGE_ANS = "PAGE_ANS";
     Player audio;
     Button audioButton;
     TextView status;
     Sound soundToLoad = null;
     String currentPage;
     Story story = null;
+    EditText editText;
+    Button button;
     Story lessonNarrativeStory = null;
     boolean fragmentResume,fragmentVisible,fragmentOnCreated,isSoundExecuted;
     public PageStoryFragment() {
@@ -67,6 +75,7 @@ public class PageStoryFragment extends Fragment {
         bdl.putString(PAGE_TITLE, message);
         bdl.putParcelable(IMAGE, i.getBitmap());
         bdl.putString(IMAGE_ID, i.getId());
+        bdl.putString(PAGE_ANS, i.getAns());
         bdl.putString(PRIORITY, i.getPriority());
         bdl.putBoolean(IS_LAST,isLast);
         bdl.putString(PAGING, paging);
@@ -83,6 +92,10 @@ public class PageStoryFragment extends Fragment {
         return f;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -90,8 +103,10 @@ public class PageStoryFragment extends Fragment {
         Bitmap bitmap = getArguments().getParcelable(IMAGE);
         final String id = getArguments().getString(IMAGE_ID);
         boolean isLast = getArguments().getBoolean(IS_LAST);
-        String pageLeft = getArguments().getString(PAGE_LEFT);
+        final String pageLeft = getArguments().getString(PAGE_LEFT);
+        final String pageAns = getArguments().getString(PAGE_ANS);
         View v = inflater.inflate(R.layout.fragment_page_story, container, false);
+
         TextView messageTextView = (TextView)v.findViewById(R.id.storyTitle);
         messageTextView.setText("");
         ImageView iv = (ImageView) v.findViewById(R.id.imageStory);
@@ -100,6 +115,30 @@ public class PageStoryFragment extends Fragment {
         currentPage = getArguments().getString(PAGING).split(" of ")[0];
         status = (TextView) v.findViewById(R.id.status);
         audioButton = (Button) v.findViewById(R.id.playAudio);
+
+        editText = v.findViewById(R.id.editText);
+        button = v.findViewById(R.id.button);
+        if(pageAns != null && !pageAns.trim().toString().equals("")){
+            editText.setBackgroundColor(Color.WHITE);
+            editText.requestFocus();
+
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean isCorrect = editText.getText().toString().toLowerCase().trim().equals(pageAns.toLowerCase());
+                    Intent i = new Intent(getActivity(),MessageActivity.class);
+                    i.putExtra(MessageActivity.QUESTION_ANS,isCorrect);
+                    //i.putExtra(LessonActivity.CURRENT_PAGE,currentPage);
+                    //i.putExtra(AppConstants.STORY_OBJ,story);
+                    //getActivity().startActivity(i);
+                    //getActivity().finish();
+                    launchPopup(isCorrect,Integer.valueOf(currentPage));
+                }
+            });
+        }else{
+            button.setVisibility(View.INVISIBLE);
+            editText.setVisibility(View.INVISIBLE);
+        }
 
         final RelativeLayout parent = (RelativeLayout)v.findViewById(R.id.myfragment_layout);
         iv.setImageBitmap(bitmap);
@@ -129,8 +168,9 @@ public class PageStoryFragment extends Fragment {
             }
         }
         if(getArguments().getBoolean(PAGE_TO_SHOW)){
-            createWindow(40,parent, "Lesson Time!",story,pageNo.getText().toString(), false,null);
-            parent.invalidate();
+            //Disabled Lesson Time.. uncomment 2 lines below to activate.
+            //createWindow(40,parent, "Lesson Time!",story,pageNo.getText().toString(), false,null);
+            //parent.invalidate();
         }
 
         if(getArguments().getBoolean(IS_LESSON) && isLast){
@@ -155,6 +195,31 @@ public class PageStoryFragment extends Fragment {
             });
         }
         return v;
+    }
+    private void launchPopup(boolean ans,int page){
+
+        AlertDialog.Builder alertadd = new AlertDialog.Builder(getActivity());
+        LayoutInflater factory = LayoutInflater.from(getActivity());
+        final View view = factory.inflate(R.layout.popupmessage, null);
+        if(ans){
+            view.setBackground(getResources().getDrawable(R.drawable.correct_ans));
+            AppCache.getInstance().updateQuestionPage(page);
+            AppCache.getInstance().enablePager();
+            MediaPlayer.create(getActivity(),R.raw.correct).start();
+        }else{
+            view.setBackground(getResources().getDrawable(R.drawable.incorrect_ans));
+            MediaPlayer.create(getActivity(),R.raw.wrong).start();
+        }
+        alertadd.setView(view);
+        /**
+        alertadd.setNeutralButton("Here!", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dlg, int sumthin) {
+
+            }
+        });
+         **/
+
+        alertadd.show();
     }
     @Override
     public void setUserVisibleHint(boolean visible){
